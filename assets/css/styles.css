@@ -669,10 +669,199 @@ main {
     }
 }
 
+/* About Section Styles */
+.about-section {
+    min-height: calc(100vh - 80px - 4rem);
+    padding: 4rem 2rem;
+    width: 100%;
+}
+
+.about-container {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.section-title {
+    text-align: center;
+    font-size: 3.5rem;
+    color: var(--text-primary);
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    margin-bottom: 3rem;
+    text-shadow: 0 0 20px rgba(0, 255, 65, 0.5);
+    animation: flicker 3s infinite alternate;
+    position: relative;
+}
+
+.section-title::after {
+    content: '';
+    display: block;
+    width: 100px;
+    height: 3px;
+    background: var(--text-primary);
+    margin: 0.2rem auto 0;
+    box-shadow: 0 0 10px var(--text-primary);
+}
+
+@media (max-width: 768px) {
+    .section-title {
+        font-size: 2.5rem;
+        letter-spacing: 2px;
+    }
+}
+
+/* Terminal Styles */
+.terminal-window {
+    max-width: 900px;
+    margin: 0 auto;
+    background: #1a1f2e;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5),
+                0 0 20px rgba(0, 255, 65, 0.2);
+    border: 1px solid rgba(0, 255, 65, 0.3);
+}
+
+.terminal-header {
+    background: #0f1419;
+    padding: 0.8rem 1rem;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid rgba(0, 255, 65, 0.2);
+}
+
+.terminal-buttons {
+    display: flex;
+    gap: 0.5rem;
+    margin-right: 1rem;
+}
+
+.terminal-btn {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.terminal-btn.close {
+    background: #ff5f56;
+}
+
+.terminal-btn.minimize {
+    background: #ffbd2e;
+}
+
+.terminal-btn.maximize {
+    background: #27c93f;
+}
+
+.terminal-title {
+    color: var(--text-white);
+    font-size: 0.9rem;
+    font-family: 'Courier New', monospace;
+    opacity: 0.8;
+}
+
+.terminal-body {
+    padding: 1.5rem;
+    min-height: 400px;
+    max-height: 600px;
+    overflow-y: auto;
+    background: #0a0e1a;
+}
+
+#terminal-output {
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    color: var(--text-white);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.terminal-line {
+    margin-bottom: 0.5rem;
+}
+
+.terminal-prompt {
+    color: var(--text-primary);
+    font-weight: bold;
+    text-shadow: 0 0 5px rgba(0, 255, 65, 0.5);
+    margin-right: 0.5rem;
+}
+
+.terminal-command {
+    color: var(--text-secondary);
+}
+
+.terminal-response {
+    color: var(--text-white);
+    margin-left: 0;
+    white-space: pre-wrap;
+}
+
+.terminal-error {
+    color: #ff0051;
+}
+
+.terminal-input-line {
+    display: flex;
+    align-items: center;
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+}
+
+.terminal-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--text-white);
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+    caret-color: var(--text-primary);
+}
+
+.terminal-input::selection {
+    background: rgba(0, 255, 65, 0.3);
+}
+
+/* Scrollbar for terminal */
+.terminal-body::-webkit-scrollbar {
+    width: 8px;
+}
+
+.terminal-body::-webkit-scrollbar-track {
+    background: #0a0e1a;
+}
+
+.terminal-body::-webkit-scrollbar-thumb {
+    background: var(--text-primary);
+    border-radius: 4px;
+}
+
+.terminal-body::-webkit-scrollbar-thumb:hover {
+    background: var(--text-secondary);
+}
+
+@media (max-width: 768px) {
+    .terminal-window {
+        border-radius: 0;
+    }
+    
+    .terminal-body {
+        padding: 1rem;
+        font-size: 0.85rem;
+    }
+    
+    .terminal-input-line {
+        font-size: 0.85rem;
+    }
+}
+
 /* Footer Styles */
 footer {
     width: 100%;
-    padding: 2rem;
+    padding: 1rem;
     background: rgba(10, 14, 39, 0.95);
     backdrop-filter: blur(10px);
     border-top: 2px solid var(--border-color);
@@ -686,7 +875,7 @@ footer {
 
 footer p {
     color: var(--text-white);
-    font-size: 0.9rem;
+    font-size: 0.75rem;
     letter-spacing: 1px;
     margin: 0;
 }
@@ -699,10 +888,10 @@ footer p::before {
 
 @media (max-width: 768px) {
     footer {
-        padding: 1.5rem;
+        padding: 0.75rem;
     }
     
     footer p {
-        font-size: 0.8rem;
+        font-size: 0.7rem;
     }
 }
