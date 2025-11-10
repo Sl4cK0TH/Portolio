@@ -285,7 +285,7 @@ Example: whois example.com`;
 Welcome to my interactive terminal!
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-Type <span style="color: var(--text-primary); font-weight: bold;">help</span> to see available commands.
+Type <span style="color: var(--text-primary); font-weight: bold;">'help'</span> to see available commands.
 `;
         addOutput(banner, 'terminal-response');
     }
