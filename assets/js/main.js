@@ -27,17 +27,22 @@ if (glitchTitle) {
 }
 
 // Glitch Effect - Horizontal Strip Displacement
-const imageContainer = document.querySelector('.image-container');
-const glitchStrips = document.querySelector('.glitch-strips');
+function initGlitchEffect(imageSelector, containerSelector, stripsSelector, imagePath) {
+    const imageContainer = document.querySelector(containerSelector);
+    const glitchStrips = document.querySelector(stripsSelector);
 
-if (imageContainer && glitchStrips) {
-    console.log('Glitch effect initialized');
+    if (!imageContainer || !glitchStrips) {
+        console.log('Glitch elements not found for:', imageSelector);
+        return;
+    }
     
-    const numStrips = 100; // Number of horizontal strips
-    const imageHeight = 400; // Match your image container height
+    console.log('Glitch effect initialized for:', imageSelector);
+    
+    const numStrips = 100;
+    const imageHeight = 400;
     const imageWidth = 400;
     const stripHeight = imageHeight / numStrips;
-    const animationDuration = 4000; // 4 seconds
+    const animationDuration = 4000;
     
     // Generate keyframes for each strip
     function generateKeyframes() {
@@ -45,7 +50,6 @@ if (imageContainer && glitchStrips) {
         let keyframesCSS = '';
         
         for (let i = 0; i < numStrips; i++) {
-            const delay = -(animationDuration / numStrips) * i;
             const bgY = -stripHeight * i;
             
             keyframesCSS += `
@@ -86,7 +90,7 @@ if (imageContainer && glitchStrips) {
                 <div class="line" style="
                     height: ${stripHeight}px;
                     width: ${imageWidth}px;
-                    background: url('assets/images/profile.jpg') no-repeat;
+                    background: url('${imagePath}') no-repeat;
                     background-position: 0 ${bgY}px;
                     background-size: ${imageWidth}px ${imageHeight}px;
                     position: absolute;
@@ -114,7 +118,6 @@ if (imageContainer && glitchStrips) {
         console.log('Glitch triggered!');
         imageContainer.classList.add('glitching');
         
-        // Stop glitch after one animation cycle (500ms = 12.5% of 4000ms)
         setTimeout(() => {
             imageContainer.classList.remove('glitching');
             console.log('Glitch stopped');
@@ -124,7 +127,7 @@ if (imageContainer && glitchStrips) {
     // Initialize on load
     initGlitch();
     
-    // Trigger immediately after 2 seconds for testing
+    // Trigger immediately after 2 seconds
     setTimeout(() => {
         triggerGlitch();
     }, 2000);
@@ -135,9 +138,13 @@ if (imageContainer && glitchStrips) {
             triggerGlitch();
         }
     }, 6000);
-} else {
-    console.error('Glitch elements not found!', {imageContainer, glitchStrips});
 }
+
+// Initialize glitch for homepage profile image
+initGlitchEffect('#profile-image', '.hero .image-container', '.hero .glitch-strips', 'assets/images/profile.jpg');
+
+// Initialize glitch for about page profile image
+initGlitchEffect('#about-profile-image', '.about-image-section .image-container', '.about-image-section .glitch-strips', '../assets/images/about-profile.jpg');
 
 // Mobile menu toggle
 const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');

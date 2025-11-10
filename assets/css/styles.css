@@ -710,10 +710,44 @@ main {
     }
 }
 
+/* About Content Layout */
+.about-content {
+    display: flex;
+    gap: 2rem;
+    align-items: flex-start;
+    margin-top: 2rem;
+}
+
+.about-image-section {
+    flex: 0 0 400px;
+    position: relative;
+}
+
+.about-terminal-section {
+    flex: 1;
+    min-width: 0;
+}
+
+@media (max-width: 1024px) {
+    .about-content {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .about-image-section {
+        flex: none;
+        width: 100%;
+        max-width: 400px;
+    }
+    
+    .about-terminal-section {
+        width: 100%;
+    }
+}
+
 /* Terminal Styles */
 .terminal-window {
-    max-width: 900px;
-    margin: 0 auto;
+    width: 100%;
     background: #1a1f2e;
     border-radius: 8px;
     overflow: hidden;
