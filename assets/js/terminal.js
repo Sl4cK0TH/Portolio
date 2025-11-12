@@ -143,21 +143,11 @@ ${getSkillBar('Misc', 50)}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-<span style="color: var(--text-secondary); font-weight: bold;">A self taught with a lot of interest in Cybersecurity</span>
+<span style="color: var(--text-secondary); font-weight: bold;">Self-taught with a strong interest in Cybersecurity</span>
 
-Hi, I am Van, a 24 years old located in Odiongan, Romblon, Philippines. My interest 
-has always been in Cyber Security. I want to ensure that security is our top priority 
-within our quickly developing world and would like to contribute to a more secure 
-environment.
+Hi, I am Van, a 24 years old located in Odiongan, Romblon, Philippines. My interest has always been in Cyber Security. I want to ensure that security is our top priority within our quickly developing world and would like to contribute to a more secure environment.
 
-I like to keep myself relevant by solving Capture The Flags and following the latest 
-IT developments that's why I always participate in any online CTF events. I also keep 
-myself busy by listening to programming, creating CTF challenges and listening to 
-podcasts like Darknet Diaries. I would like to improve myself within the Cybersecurity 
-field in order to become a Cybersecurity expert both on Red Teaming and Blue Teaming. 
-I always keep a close eye to newly discovered vulnerabilities and like to challenge 
-myself with unsolved weaknesses. I am someone who wants to make the world a more secure 
-place for the next generation, even if it goes unnoticed.`;
+I like to keep myself relevant by solving Capture The Flags and following the latest IT developments that's why I always participate in any online CTF events. I also keep myself busy by listening to programming, creating CTF challenges and listening to podcasts like Darknet Diaries. I would like to improve myself within the Cybersecurity field in order to become a Cybersecurity expert both on Red Teaming and Blue Teaming. I always keep a close eye to newly discovered vulnerabilities and like to challenge myself with unsolved weaknesses. I am someone who wants to make the world a more secure place for the next generation, even if it goes unnoticed.`;
             }
         },
         banner: {

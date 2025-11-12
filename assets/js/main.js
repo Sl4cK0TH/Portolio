@@ -147,33 +147,34 @@ initGlitchEffect('#profile-image', '.hero .image-container', '.hero .glitch-stri
 initGlitchEffect('#about-profile-image', '.about-image-section .image-container', '.about-image-section .glitch-strips', '../assets/images/about-profile.jpg');
 
 // Mobile menu toggle
-const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
-const nav = document.querySelector('nav');
+function setupMobileMenu() {
+    const mobileMenuToggle = document.querySelector('.mobile-menu-toggle');
+    const nav = document.querySelector('nav');
 
-if (mobileMenuToggle) {
-    mobileMenuToggle.addEventListener('click', () => {
-        mobileMenuToggle.classList.toggle('active');
-        nav.classList.toggle('active');
+    if (mobileMenuToggle) {
+        mobileMenuToggle.addEventListener('click', () => {
+            mobileMenuToggle.classList.toggle('active');
+            nav.classList.toggle('active');
+        });
+    }
+
+    // Close mobile menu when clicking on a link
+    const navLinks = document.querySelectorAll('nav a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            mobileMenuToggle.classList.remove('active');
+            nav.classList.remove('active');
+        });
+    });
+
+    // Close mobile menu when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!nav.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
+            mobileMenuToggle.classList.remove('active');
+            nav.classList.remove('active');
+        }
     });
 }
-
-// Close mobile menu when clicking on a link
-const navLinks = document.querySelectorAll('nav a');
-navLinks.forEach(link => {
-    link.addEventListener('click', () => {
-        mobileMenuToggle.classList.remove('active');
-        nav.classList.remove('active');
-    });
-});
-
-// Close mobile menu when clicking outside
-document.addEventListener('click', (e) => {
-    if (!nav.contains(e.target) && !mobileMenuToggle.contains(e.target)) {
-        mobileMenuToggle.classList.remove('active');
-        nav.classList.remove('active');
-    }
-}); 
-
 // Console log easter egg
 console.log('%c[SYSTEM]: Welcome, hacker!', 'color: #00ff41; font-size: 16px; font-family: monospace;');
 console.log('%c[INFO]: Looking for vulnerabilities? Try harder! 😎', 'color: #00d9ff; font-size: 14px; font-family: monospace;');
@@ -189,7 +190,7 @@ const quotes = [
         author: "Offensive Security"
     },
     {
-        text: "TWhat If Changing The World Was Just About Being Here, By Showing Up No Matter How Many Times We Get Told We Don’t Belong...",
+        text: "What If Changing The World Was Just About Being Here, By Showing Up No Matter How Many Times We Get Told We Don’t Belong...",
         author: "Elliot Alderson, Mr. Robot"
     },
     {
