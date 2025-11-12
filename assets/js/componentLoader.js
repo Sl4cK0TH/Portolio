@@ -17,24 +17,52 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Determine the base path for fetching components
-    // This handles cases where the current page is in a subdirectory (e.g., /about/index.html)
-    const getBasePath = () => {
+    // Determine the base path for fetching components (relative to current document)
+    // This is for fetching _header.html and _footer.html
+    const getRelativePathToComponents = () => {
         const pathParts = window.location.pathname.split('/').filter(part => part.length > 0);
-        // If the current page is in a subdirectory, we need to go up one level to reach assets/components
+        // If the current page is in a subdirectory (e.g., /about/index.html), return '../'
         if (pathParts.length > 1 && pathParts[pathParts.length - 1].endsWith('.html')) {
             return '../';
         }
-        return '';
+        return ''; // If at root (e.g., /index.html)
     };
 
-    const basePath = getBasePath();
+    const relativePathToComponents = getRelativePathToComponents();
+
+    // Function to adjust header links to be absolute from the site's base URL
+    function adjustHeaderLinks(headerElement) {
+        const links = headerElement.querySelectorAll('nav a, .logo a');
+        
+        // Determine the site's base URL (e.g., /Portolio/ for GitHub Pages)
+        let siteBaseUrl = '/';
+        const pathSegments = window.location.pathname.split('/').filter(segment => segment.length > 0);
+        if (pathSegments.length > 0 && !pathSegments[0].endsWith('.html')) {
+            // If the first segment is not an HTML file, assume it's the repository name
+            siteBaseUrl = `/${pathSegments[0]}/`;
+        }
+
+        links.forEach(link => {
+            let href = link.getAttribute('href');
+            if (href && !href.startsWith('http') && !href.startsWith('#')) { // Only adjust internal links
+                // If the link is already absolute from the domain root, don't prepend siteBaseUrl
+                if (href.startsWith('/')) {
+                    link.setAttribute('href', `${siteBaseUrl}${href.substring(1)}`);
+                } else {
+                    // Prepend siteBaseUrl to relative links
+                    link.setAttribute('href', `${siteBaseUrl}${href}`);
+                }
+            }
+        });
+    }
 
     // Load Header
     if (headerPlaceholder) {
-        loadComponent(headerPlaceholder, `${basePath}assets/components/_header.html`).then(() => {
-            // After header is loaded, re-initialize main.js functions that depend on it
-            // These functions are expected to be globally available from main.js
+        loadComponent(headerPlaceholder, `${relativePathToComponents}assets/components/_header.html`).then(() => {
+            // After header is loaded, adjust its links
+            adjustHeaderLinks(headerPlaceholder);
+
+            // Re-initialize main.js functions that depend on it
             if (typeof initGlitchEffect === 'function') {
                 initGlitchEffect();
             }
@@ -46,6 +74,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Load Footer
     if (footerPlaceholder) {
-        loadComponent(footerPlaceholder, `${basePath}assets/components/_footer.html`);
+        loadComponent(footerPlaceholder, `${relativePathToComponents}assets/components/_footer.html`);
     }
 });
