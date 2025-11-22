@@ -1,0 +1,23 @@
+[build]
+  command = ""
+  publish = "."
+  functions = "netlify/functions"
+
+[[redirects]]
+  from = "/.netlify/functions/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+  conditions = {Host = ["manage.zor0ark.me"]}
+
+[[redirects]]
+  from = "/*"
+  to = "/admin/:splat"
+  status = 301
+  force = true
+  conditions = {Host = ["manage.zor0ark.me"]}
+
+# Netlify Identity widget support
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"

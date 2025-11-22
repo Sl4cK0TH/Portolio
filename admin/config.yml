@@ -1,6 +1,9 @@
 backend:
-  name: git-gateway
+  name: github
+  repo: zor0ark/Portolio
   branch: main
+  base_url: https://manage.zor0ark.me
+  auth_endpoint: /.netlify/functions/decap-auth
 
 site_url: https://zor0ark.me
 display_url: https://zor0ark.me
