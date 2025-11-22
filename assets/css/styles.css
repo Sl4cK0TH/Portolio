@@ -15,7 +15,7 @@
 }
 
 body {
-    font-family: 'Courier New', monospace;
+    font-family: 'Poppins', 'Segoe UI', sans-serif;
     background-color: var(--bg-primary);
     color: var(--text-white);
     line-height: 1.6;
@@ -136,6 +136,13 @@ nav a:hover {
 
 nav a:hover::before {
     width: 80%;
+}
+
+nav a.active {
+    color: var(--text-primary);
+    border-color: var(--border-color);
+    background: rgba(0, 255, 65, 0.08);
+    box-shadow: 0 0 12px rgba(0, 255, 65, 0.25);
 }
 
 /* Mobile Menu Toggle */
@@ -336,11 +343,34 @@ main {
 
 .image-container.glitching img {
     opacity: 0;
+    filter: saturate(1.2);
+}
+
+.image-container.glitching::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 10px;
+    background: linear-gradient(90deg, rgba(0, 255, 65, 0.08), rgba(0, 217, 255, 0.12), rgba(255, 0, 85, 0.08));
+    mix-blend-mode: screen;
+    opacity: 0.9;
+    animation: rgbShift 0.5s ease-in-out;
+    z-index: 4;
 }
 
 .line {
     position: absolute;
     left: 0;
+    top: 0;
+    width: 100%;
+    will-change: transform;
+}
+
+@keyframes rgbShift {
+    0% { transform: translate(0); }
+    40% { transform: translate(-3px, 2px); }
+    70% { transform: translate(2px, -1px); }
+    100% { transform: translate(0); }
 }
 
 /* Social Links */
@@ -793,7 +823,7 @@ main {
 .terminal-title {
     color: var(--text-white);
     font-size: 0.9rem;
-    font-family: 'Courier New', monospace;
+    font-family: 'Fira Code', monospace;
     opacity: 0.8;
 }
 
@@ -806,7 +836,7 @@ main {
 }
 
 #terminal-output {
-    font-family: 'Courier New', monospace;
+    font-family: 'Fira Code', monospace;
     font-size: 0.95rem;
     color: var(--text-white);
     line-height: 1.6;
@@ -834,6 +864,53 @@ main {
     white-space: pre-wrap;
 }
 
+.terminal-skills {
+    color: var(--text-secondary);
+    font-weight: bold;
+    font-size: 1.05rem;
+}
+
+.skill-item {
+    margin-bottom: 0.4rem;
+}
+
+.skill-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 0.1rem;
+    align-items: center;
+}
+
+.skill-name {
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.skill-rank {
+    font-weight: 700;
+}
+
+.rank-hacker { color: #ff0051; }
+.rank-pro { color: #00d9ff; }
+.rank-noob { color: #ffbd2e; }
+
+.skill-bar-wrap {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.skill-bar {
+    color: var(--text-primary);
+    font-family: monospace;
+}
+
+.skill-percent {
+    color: var(--text-secondary);
+    font-weight: 700;
+    min-width: 45px;
+}
+
 .terminal-error {
     color: #ff0051;
 }
@@ -841,7 +918,7 @@ main {
 .terminal-input-line {
     display: flex;
     align-items: center;
-    font-family: 'Courier New', monospace;
+    font-family: 'Fira Code', monospace;
     font-size: 0.95rem;
 }
 
@@ -851,7 +928,7 @@ main {
     border: none;
     outline: none;
     color: var(--text-white);
-    font-family: 'Courier New', monospace;
+    font-family: 'Fira Code', monospace;
     font-size: 0.95rem;
     caret-color: var(--text-primary);
 }
@@ -958,6 +1035,18 @@ footer p::before {
     flex-direction: column;
     gap: 1.5rem;
     margin-bottom: 3rem;
+}
+
+.form-status {
+    min-height: 1.5rem;
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-top: -0.5rem;
+    margin-bottom: 1rem;
+}
+
+.form-status.error {
+    color: #ff0051;
 }
 
 .form-group {
@@ -1162,4 +1251,3 @@ footer p::before {
 .social-links-contact a i {
     line-height: 1;
 }
-

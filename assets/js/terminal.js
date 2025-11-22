@@ -4,6 +4,23 @@ document.addEventListener('DOMContentLoaded', function() {
     const terminalOutput = document.getElementById('terminal-output');
     
     if (!terminalInput || !terminalOutput) return;
+
+    // Simple virtual filesystem
+    const fileSystem = {
+        type: 'dir',
+        children: {
+            '.secret': {
+                type: 'dir',
+                children: {
+                    'flag.txt': {
+                        type: 'file',
+                        encoded: 'cnN1Q1RGe3kwdV9zaDB1bGRfY3IzQHQzXzRfcDBydGYwbDEwfQ=='
+                    }
+                }
+            }
+        }
+    };
+    const state = { currentPath: '/' };
     
     // Command history
     let commandHistory = [];
@@ -31,57 +48,58 @@ Type any command to get started!`;
         },
         skills: {
             description: 'Technical skills',
+            memo: null,
             action: function() {
-                // Helper function to generate progress bar and rank
-                const getSkillBar = (name, percentage) => {
+                if (this.memo) return this.memo;
+
+                const skillsData = [
+                    { name: 'Communication', value: 65 },
+                    { name: 'Programming Skills', value: 60 },
+                    { name: 'Linux', value: 50 },
+                    { name: 'Penetration Testing', value: 65 },
+                    { name: 'Web Pentesting', value: 50 },
+                    { name: 'Reverse Engineering', value: 40 },
+                    { name: 'Pwn', value: 27 },
+                    { name: 'Forensics', value: 50 },
+                    { name: 'Cryptography', value: 30 },
+                    { name: 'OSINT', value: 40 },
+                    { name: 'Misc', value: 50 }
+                ];
+
+                const getRankClass = (val) => {
+                    if (val >= 70) return { label: 'Hacker', cls: 'rank-hacker' };
+                    if (val >= 40) return { label: 'Pro', cls: 'rank-pro' };
+                    return { label: 'Noob', cls: 'rank-noob' };
+                };
+
+                const buildBar = (val) => {
                     const barLength = 30;
-                    const filled = Math.round((percentage / 100) * barLength);
-                    const empty = barLength - filled;
-                    const bar = '█'.repeat(filled) + '░'.repeat(empty);
-                    
-                    // Determine rank based on percentage
-                    let rank, rankColor;
-                    if (percentage >= 70) {
-                        rank = 'Hacker';
-                        rankColor = '#ff0051'; // Neon pink
-                    } else if (percentage >= 40) {
-                        rank = 'Pro';
-                        rankColor = '#00d9ff'; // Cyan
-                    } else {
-                        rank = 'Noob';
-                        rankColor = '#ffbd2e'; // Yellow
-                    }
-                    
-                    return `<div style="margin-bottom: 0.3rem;">
-  <div style="display: flex; justify-content: space-between; margin-bottom: 0.1rem;">
-    <span style="color: var(--text-primary); font-weight: bold;">${name}</span>
-    <span style="color: ${rankColor}; font-weight: bold;">[${rank}]</span>
+                    const filled = Math.round((val / 100) * barLength);
+                    return '█'.repeat(filled) + '░'.repeat(barLength - filled);
+                };
+
+                const items = skillsData.map(({ name, value }) => {
+                    const { label, cls } = getRankClass(value);
+                    return `<div class="skill-item">
+  <div class="skill-header">
+    <span class="skill-name">${name}</span>
+    <span class="skill-rank ${cls}">[${label}]</span>
   </div>
-  <div style="display: flex; align-items: center; gap: 1rem;">
-    <div style="flex: 1; font-family: monospace;">
-      <span style="color: var(--text-primary);">${bar}</span>
-    </div>
-    <span style="color: var(--text-secondary); font-weight: bold; min-width: 45px;">${percentage}%</span>
+  <div class="skill-bar-wrap">
+    <span class="skill-bar">${buildBar(value)}</span>
+    <span class="skill-percent">${value}%</span>
   </div>
 </div>`;
-                };
-                
-                return `<span style="color: var(--text-secondary); font-weight: bold; font-size: 1.1rem;">Technical Skills</span>
+                }).join('\n');
+
+                this.memo = `<div class="terminal-skills">Technical Skills</div>
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
-${getSkillBar('Communication', 65)}
-${getSkillBar('Programming Skills', 60)}
-${getSkillBar('Linux', 50)}
-${getSkillBar('Penetration Testing', 65)}
-${getSkillBar('Web Pentesting', 50)}
-${getSkillBar('Reverse Engineering', 40)}
-${getSkillBar('Pwn', 27)}
-${getSkillBar('Forensics', 50)}
-${getSkillBar('Cryptography', 30)}
-${getSkillBar('OSINT', 40)}
-${getSkillBar('Misc', 50)}
+${items}
 
-<span style="color: #ffbd2e;">⚡ Noob</span>: 0-39% | <span style="color: #00d9ff;">⚡ Pro</span>: 40-69% | <span style="color: #ff0051;">⚡ Hacker</span>: 70-100%`;
+<span class="rank-noob">⚡ Noob</span>: 0-39% | <span class="rank-pro">⚡ Pro</span>: 40-69% | <span class="rank-hacker">⚡ Hacker</span>: 70-100%`;
+
+                return this.memo;
             }
         },
         education: {
@@ -257,6 +275,66 @@ Example: whois example.com`;
                 
                 return `<span style="color: var(--text-secondary);">${output}</span>`;
             }
+        },
+        ls: {
+            description: 'List directory contents',
+            action: function(args) {
+                const includeHidden = args.some(a => ['-a', '-la', '-al', '-l', '-lha', '-lah'].includes(a));
+                const pathArg = args.find(a => !a.startsWith('-')) || '.';
+
+                const { targetNode, error } = resolvePath(pathArg);
+                if (error) return `<span style="color: #ff0051;">${error}</span>`;
+                if (targetNode.type !== 'dir') return '';
+
+                const entries = Object.keys(targetNode.children || {});
+                const visible = includeHidden ? entries : entries.filter(e => !e.startsWith('.'));
+
+                if (!visible.length && !includeHidden) return '';
+
+                if (includeHidden) {
+                    const lines = [
+                        'total 8',
+                        'drwxr-xr-x  1 zor0ark nullbytez 4096 ./',
+                        'drwxr-xr-x  1 root    root      4096 ../'
+                    ];
+                    entries.forEach(name => {
+                        lines.push(`drwxr-xr-x  1 zor0ark nullbytez 4096 ${name}/`);
+                    });
+                    return `<span style="color: var(--text-secondary);">${lines.join('\n')}</span>`;
+                }
+
+                return `<span style="color: var(--text-secondary);">${visible.join('  ')}</span>`;
+            }
+        },
+        cat: {
+            description: 'Print file contents',
+            action: function(args) {
+                if (!args || args.length === 0) {
+                    return `<span style="color: #ff0051;">Usage: cat [file]</span>`;
+                }
+                const { targetNode, error, targetPath } = resolvePath(args[0]);
+                if (error) return `<span style="color: #ff0051;">cat: ${args[0]}: No such file or directory</span>`;
+                if (targetNode.type !== 'file') {
+                    return `<span style="color: #ff0051;">cat: ${targetPath}: Is a directory</span>`;
+                }
+                if (!targetNode.encoded) return '';
+                const flag = atob(targetNode.encoded);
+                return `<span style="color: var(--text-secondary);">${flag}</span>`;
+            }
+        },
+        cd: {
+            description: 'Change directory',
+            action: function(args) {
+                const destination = args[0] || '/';
+                const { targetNode, targetPath, error } = resolvePath(destination);
+                if (error) return `<span style="color: #ff0051;">cd: ${destination}: ${error}</span>`;
+                if (targetNode.type !== 'dir') {
+                    return `<span style="color: #ff0051;">cd: ${destination}: Not a directory</span>`;
+                }
+                state.currentPath = targetPath;
+                updateLivePrompt();
+                return null;
+            }
         }
     };
     
@@ -288,6 +366,21 @@ Type <span style="color: var(--text-primary); font-weight: bold;">'help'</span> 
         terminalOutput.appendChild(line);
         scrollToBottom();
     }
+
+    function formatPathForPrompt(path) {
+        return path === '/' ? '~' : path;
+    }
+
+    function getPromptText() {
+        return `zor0ark@nullbytez:${formatPathForPrompt(state.currentPath)}$ `;
+    }
+
+    function updateLivePrompt() {
+        const promptSpan = document.querySelector('.terminal-input-line .terminal-prompt');
+        if (promptSpan) {
+            promptSpan.textContent = getPromptText();
+        }
+    }
     
     // Scroll to bottom
     function scrollToBottom() {
@@ -308,7 +401,7 @@ Type <span style="color: var(--text-primary); font-weight: bold;">'help'</span> 
         }
         
         // Display command
-        addOutput(`<span class="terminal-prompt">zor0ark@nullbytez:~$ </span><span class="terminal-command">${input}</span>`);
+        addOutput(`<span class="terminal-prompt">${getPromptText()}</span><span class="terminal-command">${input}</span>`);
         
         // Execute command
         if (!command) {
@@ -363,4 +456,32 @@ Type <span style="color: var(--text-primary); font-weight: bold;">'help'</span> 
     
     // Display welcome message on load
     displayWelcome();
+
+    // Helpers
+    function resolvePath(inputPath) {
+        const parts = inputPath ? inputPath.split('/') : ['.'];
+        let pathParts = inputPath.startsWith('/') ? [] : state.currentPath === '/' ? [] : state.currentPath.split('/').filter(Boolean);
+
+        parts.forEach(part => {
+            if (!part || part === '.') return;
+            if (part === '..') {
+                pathParts.pop();
+            } else {
+                pathParts.push(part);
+            }
+        });
+
+        let node = fileSystem;
+        for (const segment of pathParts) {
+            if (!node.children || !node.children[segment]) {
+                return { error: 'No such file or directory' };
+            }
+            node = node.children[segment];
+        }
+
+        const targetPath = `/${pathParts.join('/')}`.replace(/\/{2,}/g, '/').replace(/\/$/, '') || '/';
+        return { targetNode: node, targetPath };
+    }
+
+    updateLivePrompt();
 });

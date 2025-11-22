@@ -26,125 +26,123 @@ if (glitchTitle) {
     }, 5000);
 }
 
-// Glitch Effect - Horizontal Strip Displacement
-function initGlitchEffect(imageSelector, containerSelector, stripsSelector, imagePath) {
+// Glitch Effect - Horizontal Strip Displacement (lighter version)
+const glitchDefaults = {
+    strips: 30,
+    duration: 3200,
+    width: 400,
+    height: 400
+};
+
+let glitchKeyframesInjected = false;
+const initializedGlitchTargets = new Set();
+
+function injectGlitchKeyframes() {
+    if (glitchKeyframesInjected) return;
+    const styleSheet = document.createElement('style');
+    styleSheet.textContent = `
+        @keyframes stripGlitch {
+            0%, 100% { transform: translateX(0); }
+            6% { transform: translateX(var(--glitch-offset)); }
+            7.5% { transform: translateX(calc(var(--glitch-offset) * -0.35)); }
+            9% { transform: translateX(var(--glitch-offset)); }
+            11% { transform: translateX(0); }
+        }
+    `;
+    document.head.appendChild(styleSheet);
+    glitchKeyframesInjected = true;
+}
+
+function buildGlitchStrips({ glitchStrips, imagePath, width, height, strips, duration }) {
+    const stripHeight = height / strips;
+    const stripsHTML = [];
+
+    for (let i = 0; i < strips; i++) {
+        const offset = (Math.random() * 60 - 30).toFixed(1); // -30px to 30px
+        const delay = -((duration / strips) * i).toFixed(2);
+
+        stripsHTML.push(`
+            <div class="line" style="
+                height: ${stripHeight}px;
+                background: url('${imagePath}') no-repeat;
+                background-position: 0 ${-stripHeight * i}px;
+                background-size: ${width}px ${height}px;
+                top: ${stripHeight * i}px;
+                animation: stripGlitch ${duration}ms ${delay}ms infinite;
+                --glitch-offset: ${offset}px;
+            "></div>
+        `);
+    }
+
+    glitchStrips.innerHTML = stripsHTML.join('');
+}
+
+function initGlitchEffect(config) {
+    const {
+        imageSelector,
+        containerSelector,
+        stripsSelector,
+        imagePath,
+        strips = glitchDefaults.strips,
+        duration = glitchDefaults.duration
+    } = config;
+
+    const image = document.querySelector(imageSelector);
     const imageContainer = document.querySelector(containerSelector);
     const glitchStrips = document.querySelector(stripsSelector);
 
-    if (!imageContainer || !glitchStrips) {
-        console.log('Glitch elements not found for:', imageSelector);
+    if (!image || !imageContainer || !glitchStrips) {
         return;
     }
-    
-    console.log('Glitch effect initialized for:', imageSelector);
-    
-    const numStrips = 100;
-    const imageHeight = 400;
-    const imageWidth = 400;
-    const stripHeight = imageHeight / numStrips;
-    const animationDuration = 4000;
-    
-    // Generate keyframes for each strip
-    function generateKeyframes() {
-        let styleSheet = document.createElement('style');
-        let keyframesCSS = '';
-        
-        for (let i = 0; i < numStrips; i++) {
-            const bgY = -stripHeight * i;
-            
-            keyframesCSS += `
-                @keyframes glitch-strip-${i} {
-                    0% { background-position: 0 ${bgY}px; }
-                    2.5% { background-position: 30px ${bgY}px; }
-                    2.75% { background-position: -10px ${bgY}px; }
-                    3.6% { background-position: 15px ${bgY}px; }
-                    4.7% { background-position: -17px ${bgY}px; }
-                    5% { background-position: -22px ${bgY}px; }
-                    7% { background-position: 150px ${bgY}px; }
-                    7.2% { background-position: 26px ${bgY}px; }
-                    8.5% { background-position: 28px ${bgY}px; }
-                    8.6% { background-position: 0 ${bgY}px; }
-                    8.9% { background-position: -5px ${bgY}px; }
-                    9.2% { background-position: -4px ${bgY}px; }
-                    10.4% { background-position: -105px ${bgY}px; }
-                    12.5% { background-position: 0 ${bgY}px; }
-                    100% { background-position: 0 ${bgY}px; }
-                }
-            `;
-        }
-        
-        styleSheet.textContent = keyframesCSS;
-        document.head.appendChild(styleSheet);
-        console.log('Keyframes generated');
-    }
-    
-    // Generate strips HTML
-    function generateStrips() {
-        const strips = [];
-        
-        for (let i = 0; i < numStrips; i++) {
-            const bgY = -stripHeight * i;
-            const delay = -(animationDuration / numStrips) * i;
-            
-            const stripHTML = `
-                <div class="line" style="
-                    height: ${stripHeight}px;
-                    width: ${imageWidth}px;
-                    background: url('${imagePath}') no-repeat;
-                    background-position: 0 ${bgY}px;
-                    background-size: ${imageWidth}px ${imageHeight}px;
-                    position: absolute;
-                    top: ${stripHeight * i}px;
-                    left: 0;
-                    animation: glitch-strip-${i} ${animationDuration}ms ${delay}ms infinite;
-                "></div>
-            `;
-            
-            strips.push(stripHTML);
-        }
-        
-        glitchStrips.innerHTML = strips.join('');
-        console.log(`Generated ${numStrips} strips`);
-    }
-    
-    // Initialize glitch effect
-    function initGlitch() {
-        generateKeyframes();
-        generateStrips();
-    }
-    
-    // Trigger glitch effect
-    function triggerGlitch() {
-        console.log('Glitch triggered!');
+
+    const targetKey = `${containerSelector}|${imageSelector}`;
+    if (initializedGlitchTargets.has(targetKey)) return;
+
+    const resolvedWidth = image.clientWidth || imageContainer.clientWidth || image.naturalWidth || glitchDefaults.width;
+    const resolvedHeight = image.clientHeight || imageContainer.clientHeight || image.naturalHeight || glitchDefaults.height;
+
+    injectGlitchKeyframes();
+    buildGlitchStrips({
+        glitchStrips,
+        imagePath,
+        width: resolvedWidth,
+        height: resolvedHeight,
+        strips,
+        duration
+    });
+
+    const triggerGlitch = () => {
         imageContainer.classList.add('glitching');
-        
         setTimeout(() => {
             imageContainer.classList.remove('glitching');
-            console.log('Glitch stopped');
         }, 500);
-    }
-    
-    // Initialize on load
-    initGlitch();
-    
-    // Trigger immediately after 2 seconds
-    setTimeout(() => {
-        triggerGlitch();
-    }, 2000);
-    
-    // Run glitch every 6 seconds
+    };
+
+    setTimeout(triggerGlitch, 1200);
     setInterval(() => {
-        if (Math.random() < 0.6) {
+        if (Math.random() < 0.7) {
             triggerGlitch();
         }
-    }, 6000);
+    }, 5500);
+
+    initializedGlitchTargets.add(targetKey);
 }
 
 // Initialize glitch for homepage profile image
-initGlitchEffect('#profile-image', '.hero .image-container', '.hero .glitch-strips', 'assets/images/profile.jpg');
+initGlitchEffect({
+    imageSelector: '#profile-image',
+    containerSelector: '.hero .image-container',
+    stripsSelector: '.hero .glitch-strips',
+    imagePath: 'assets/images/profile.jpg'
+});
 
 // Initialize glitch for about page profile image
-initGlitchEffect('#about-profile-image', '.about-image-section .image-container', '.about-image-section .glitch-strips', '../assets/images/about-profile.jpg');
+initGlitchEffect({
+    imageSelector: '#about-profile-image',
+    containerSelector: '.about-image-section .image-container',
+    stripsSelector: '.about-image-section .glitch-strips',
+    imagePath: '../assets/images/about-profile.jpg'
+});
 
 // Mobile menu toggle
 function setupMobileMenu() {
