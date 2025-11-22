@@ -1,0 +1,74 @@
+backend:
+  name: git-gateway
+  branch: main
+
+site_url: https://zor0ark.me
+display_url: https://zor0ark.me
+
+media_folder: "assets/uploads"
+public_folder: "/assets/uploads"
+
+publish_mode: editorial_workflow
+
+collections:
+  - name: "achievements"
+    label: "Achievements"
+    label_singular: "Achievement"
+    folder: "content/achievements"
+    create: true
+    slug: "{{year}}-{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Category", name: "category", widget: "select", options: ["CTF", "Competition", "Award", "Other"], default: "CTF" }
+      - { label: "Event / Issuer", name: "issuer", widget: "string", required: false }
+      - { label: "Date", name: "date", widget: "datetime", time_format: false }
+      - { label: "Placement", name: "placement", widget: "string", required: false, hint: "e.g., 1st place, Finalist" }
+      - { label: "Location", name: "location", widget: "string", required: false }
+      - { label: "Link", name: "link", widget: "string", required: false }
+      - { label: "Summary", name: "body", widget: "markdown", hint: "Short description of the achievement" }
+      - { label: "Tags", name: "tags", widget: "list", default: ["achievement"] }
+
+  - name: "certificates"
+    label: "Certificates"
+    folder: "content/certificates"
+    create: true
+    slug: "{{year}}-{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Issuer", name: "issuer", widget: "string" }
+      - { label: "Issue Date", name: "date", widget: "datetime", time_format: false }
+      - { label: "Expiry Date", name: "expiry", widget: "datetime", time_format: false, required: false }
+      - { label: "Credential ID", name: "credential_id", widget: "string", required: false }
+      - { label: "Credential URL", name: "link", widget: "string", required: false }
+      - { label: "Notes", name: "body", widget: "markdown", required: false }
+      - { label: "Tags", name: "tags", widget: "list", default: ["certificate"] }
+
+  - name: "writeups"
+    label: "Writeups"
+    folder: "content/writeups"
+    create: true
+    slug: "{{year}}-{{month}}-{{day}}-{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Event / CTF", name: "event", widget: "string", required: false }
+      - { label: "Date", name: "date", widget: "datetime", time_format: false }
+      - { label: "Difficulty", name: "difficulty", widget: "select", options: ["Easy", "Medium", "Hard", "Insane"], required: false }
+      - { label: "Category", name: "category", widget: "select", options: ["Web", "Crypto", "Pwn", "Forensics", "OSINT", "Misc", "Reversing", "Other"], required: false }
+      - { label: "Link", name: "link", widget: "string", required: false, hint: "External link to full writeup if hosted elsewhere" }
+      - { label: "Body", name: "body", widget: "markdown" }
+      - { label: "Tags", name: "tags", widget: "list", default: ["writeup"] }
+
+  - name: "projects"
+    label: "Projects"
+    folder: "content/projects"
+    create: true
+    slug: "{{year}}-{{slug}}"
+    fields:
+      - { label: "Title", name: "title", widget: "string" }
+      - { label: "Date", name: "date", widget: "datetime", time_format: false }
+      - { label: "Status", name: "status", widget: "select", options: ["Planned", "In Progress", "Shipped"], default: "Shipped" }
+      - { label: "Repository", name: "repo", widget: "string", required: false }
+      - { label: "Live URL", name: "live", widget: "string", required: false }
+      - { label: "Summary", name: "summary", widget: "text" }
+      - { label: "Body", name: "body", widget: "markdown", required: false }
+      - { label: "Tags", name: "tags", widget: "list", default: ["project"] }
