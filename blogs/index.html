@@ -40,6 +40,7 @@
         fetch(rssUrl)
             .then(response => response.json())
             .then(data => {
+                console.log("Medium API Response:", data); // Log the raw API data
                 const posts = data.items;
                 let html = '';
                 
