@@ -18,13 +18,7 @@
                 <h1 class="section-title">./contact</h1>
                 <p class="contact-intro">Feel free to reach out for collaborations, inquiries, or just to say hello!</p>
                 
-                <form class="contact-form" name="contact" method="POST" netlify>
-                    <input type="hidden" name="form-name" value="contact" />
-                    <p hidden>
-                        <label>
-                            Don’t fill this out if you’re human: <input name="bot-field" />
-                        </label>
-                    </p>
+                <form class="contact-form" action="https://formspree.io/f/movolppq" method="POST">
                     <div class="form-group">
                         <label for="name">Name:</label>
                         <input type="text" id="name" name="name" required>
