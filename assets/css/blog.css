@@ -29,10 +29,12 @@
 }
 
 .blog-img {
-    width: 200px; /* Fixed width for the image */
-    height: 150px; /* Fixed height */
+    width: 150px; /* Fixed square dimensions */
+    height: 150px; /* Fixed square dimensions */
     object-fit: cover;
     border-right: 1px solid #eee; /* Separator */
+    margin: 0 1rem; /* Added space to the left and right */
+    border-radius: 8px; /* Added roundness */
 }
 
 .blog-content {
@@ -64,4 +66,40 @@
     color: #007bff; /* Accent color */
     text-decoration: none;
     font-weight: 700;
+}
+
+/* Search Box Styles */
+.search-container {
+    margin-bottom: 2rem;
+    position: relative; /* For icon positioning */
+}
+
+.search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #e0e0e080; /* Same as placeholder */
+}
+
+#blog-search {
+    width: 100%;
+    padding: 0.8rem 1rem 0.8rem 3rem; /* Added left padding for icon */
+    font-size: 1rem;
+    font-family: 'Fira Code', monospace;
+    background-color: #1a1f3a; /* Using var(--bg-secondary) value */
+    color: #e0e0e0; /* Using var(--text-white) value */
+    border: 1px solid #00ff4150; /* Using var(--border-color) value */
+    border-radius: 5px;
+    outline: none;
+    transition: all 0.3s ease;
+}
+
+#blog-search::placeholder {
+    color: #e0e0e080; /* Lighter version of text-white */
+}
+
+#blog-search:focus {
+    border-color: #00d9ff; /* Using var(--text-secondary) value */
+    box-shadow: 0 0 10px rgba(0, 217, 255, 0.5);
 }

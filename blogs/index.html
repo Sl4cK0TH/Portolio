@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-site-base="/">
+<html lang="en" data-site-base="/Portolio/">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -18,6 +18,11 @@
         <section class="blog-section">
             <div class="blog-container">
                 <h1 class="section-title" style="font-family: 'Fira Code', monospace;">./blogs</h1>
+
+                <div class="search-container">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" id="blog-search" placeholder="Search articles by keyword...">
+                </div>
                 
                 <div id="medium-widget" class="blog-grid">
                     <p style="font-family: 'Fira Code'">Fetching data...</p>
@@ -40,7 +45,6 @@
         fetch(rssUrl)
             .then(response => response.json())
             .then(data => {
-                console.log("Medium API Response:", data); // Log the raw API data
                 const posts = data.items;
                 let html = '';
                 
@@ -53,12 +57,8 @@
                         year: 'numeric', month: 'short', day: 'numeric'
                     });
 
-                    // Find image (Thumbnail or first image in content)
-                    // Create a temporary element to find the image inside the content if thumbnail is empty
-                    const tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = post.content;
-                    const contentImg = tempDiv.querySelector('img');
-                    const imageUrl = post.thumbnail || (contentImg ? contentImg.src : 'https://placehold.co/600x400?text=No+Image');
+                    // Use a fixed image URL as the thumbnail for all posts
+                    const imageUrl = 'https://cdn-images-1.medium.com/fit/c/150/150/1*0tJpYn4rUlX1F5mshRBEFQ.png';
 
                     html += `
                         <article class="blog-card">
@@ -74,6 +74,26 @@
                 });
                 
                 document.getElementById('medium-widget').innerHTML = html;
+
+                // --- Blog Search Functionality ---
+                const searchInput = document.getElementById('blog-search');
+                const blogCards = document.querySelectorAll('.blog-card'); // Use querySelectorAll to get all cards
+
+                searchInput.addEventListener('keyup', () => {
+                    const searchTerm = searchInput.value.toLowerCase();
+
+                    blogCards.forEach(card => {
+                        const title = card.querySelector('.blog-title').textContent.toLowerCase();
+                        const description = card.querySelector('p').textContent.toLowerCase();
+                        
+                        // Check if the card's content includes the search term
+                        if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                            card.style.display = 'flex'; // Show the card
+                        } else {
+                            card.style.display = 'none'; // Hide the card
+                        }
+                    });
+                });
             })
             .catch(error => {
                 console.error('Error:', error);
