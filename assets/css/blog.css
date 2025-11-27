@@ -1,0 +1,67 @@
+.blog-container {
+    max-width: 900px; /* Adjusted for list view */
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.blog-grid { /* This is now a list container */
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+/* Card Styling for List Layout */
+.blog-card {
+    background: rgba(255, 255, 255, 0.05); /* Slight transparency if you have a dark bg */
+    border: 1px solid #ddd; /* Adjust to #333 if dark mode */
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.2s ease;
+    display: flex;
+    flex-direction: row; /* Main change for list layout */
+    align-items: center; /* Vertically align image and content */
+}
+
+.blog-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.blog-img {
+    width: 200px; /* Fixed width for the image */
+    height: 150px; /* Fixed height */
+    object-fit: cover;
+    border-right: 1px solid #eee; /* Separator */
+}
+
+.blog-content {
+    padding: 1.5rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.blog-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: inherit;
+    text-decoration: none;
+}
+
+.blog-meta {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.8rem;
+    color: #666; /* Adjust for dark mode */
+    margin-bottom: 1rem;
+}
+
+.blog-link {
+    margin-top: auto;
+    font-family: 'Fira Code', monospace;
+    color: #007bff; /* Accent color */
+    text-decoration: none;
+    font-weight: 700;
+}

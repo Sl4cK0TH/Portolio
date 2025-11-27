@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" data-site-base="/">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blogs</title>
+    <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../assets/css/blog.css">
+</head>
+
+<body>
+    <div id="header-placeholder"></div>
+
+    <main>
+        <section class="blog-section">
+            <div class="blog-container">
+                <h1 class="section-title" style="font-family: 'Fira Code', monospace;">./blogs</h1>
+                
+                <div id="medium-widget" class="blog-grid">
+                    <p style="font-family: 'Fira Code'">Fetching data...</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <div id="footer-placeholder"></div>
+    
+    <script src="../assets/js/componentLoader.js" defer></script>
+    <script src="../assets/js/main.js"></script>
+
+    <script>
+        // CONFIGURATION: Enter your Medium Username here (no @ symbol needed)
+        const mediumUsername = 'Zor0ark'; 
+
+        const rssUrl = `https://api.rss2json.com/v1/api.json?rss_url=https://medium.com/feed/@${mediumUsername}&_=${new Date().getTime()}`;
+
+        fetch(rssUrl)
+            .then(response => response.json())
+            .then(data => {
+                const posts = data.items;
+                let html = '';
+                
+                posts.forEach(post => {
+                    // Clean up description (remove HTML tags and limit length)
+                    const cleanDesc = post.description.replace(/<[^>]*>?/gm, '').substring(0, 120) + '...';
+                    
+                    // Format Date
+                    const date = new Date(post.pubDate).toLocaleDateString('en-US', {
+                        year: 'numeric', month: 'short', day: 'numeric'
+                    });
+
+                    // Find image (Thumbnail or first image in content)
+                    // Create a temporary element to find the image inside the content if thumbnail is empty
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = post.content;
+                    const contentImg = tempDiv.querySelector('img');
+                    const imageUrl = post.thumbnail || (contentImg ? contentImg.src : 'https://placehold.co/600x400?text=No+Image');
+
+                    html += `
+                        <article class="blog-card">
+                            <img src="${imageUrl}" alt="${post.title}" class="blog-img">
+                            <div class="blog-content">
+                                <div class="blog-meta">${date}</div>
+                                <a href="${post.link}" target="_blank" class="blog-title">${post.title}</a>
+                                <p style="font-size: 0.9rem; margin-bottom: 1rem;">${cleanDesc}</p>
+                                <a href="${post.link}" target="_blank" class="blog-link">READ_MORE ></a>
+                            </div>
+                        </article>
+                    `;
+                });
+                
+                document.getElementById('medium-widget').innerHTML = html;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('medium-widget').innerHTML = '<p>Error loading writeups. Please check the console.</p>';
+            });
+    </script>
+</body>
+</html>
