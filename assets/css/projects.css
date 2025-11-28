@@ -1,0 +1,112 @@
+/* Projects Section Styles */
+.projects-section {
+    padding: 1rem 2rem 4rem 2rem;
+    width: 100%;
+}
+
+.projects-container {
+    max-width: 1200px; /* Extended to fill more space */
+    margin: 0 auto; /* Centered */
+}
+
+.project-category-title {
+    font-family: 'Fira Code', monospace;
+    font-size: 1.5rem;
+    color: #00d9ff; /* var(--text-secondary) */
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.projects-grid {
+    display: flex; /* Changed to flex */
+    flex-direction: column; /* Changed to column for list view */
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+.project-card {
+    background: #1a1f3a; /* var(--bg-secondary) */
+    border: 1px solid #00ff4150; /* var(--border-color) */
+    border-radius: 8px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column; /* Already column, good for content inside card */
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.project-card:hover {
+    transform: translateY(-5px); /* Keep the lift effect */
+    box-shadow: 0 10px 25px rgba(0, 255, 65, 0.2);
+    border-color: #00ff41; /* var(--text-primary) */
+}
+
+.project-card .card-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.project-card .card-header .fa-github {
+    font-size: 1.8rem;
+    color: #e0e0e0; /* var(--text-white) */
+}
+
+.project-title {
+    font-family: 'Fira Code', monospace;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: #00d9ff; /* var(--text-secondary) */
+    text-decoration: none;
+}
+
+.project-title:hover {
+    text-decoration: underline;
+}
+
+.project-description {
+    font-family: 'Poppins', sans-serif;
+    color: #e0e0e0; /* var(--text-white) */
+    font-size: 0.9rem;
+    line-height: 1.6;
+    flex-grow: 1; /* Pushes footer to the bottom */
+    margin-bottom: 1.5rem;
+}
+
+.project-card .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.8rem;
+    color: #e0e0e080; /* Lighter text white */
+}
+
+.project-language, .project-stars {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.lang-color-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    border: 1px solid #ffffff30;
+}
+
+.project-stars .fa-star {
+    color: #f1e05a; /* A gold-like color for stars */
+}
+
+.error-message {
+    color: #ff0051; /* var(--accent) */
+    font-family: 'Fira Code', monospace;
+}
+
+@media (max-width: 768px) {
+    /* Responsive styles for project cards in list view can be added here if needed,
+       but with flex-direction: column for projects-grid, it will already stack well. */
+}

@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio</title>
+    <title>Projects</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/projects.css"> <!-- New stylesheet for projects -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
 </head>
@@ -13,14 +14,12 @@
     <div id="header-placeholder"></div>
 
     <main>
-        <section class="coming-soon-section">
-            <div class="coming-soon-container">
-                <h1 class="section-title">./portfolio</h1>
-                <p class="coming-soon-text">This page is currently under construction. Check back soon!</p>
-                <div class="loading-dots">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+        <section class="projects-section">
+            <div class="projects-container">
+                <h1 class="section-title">./projects</h1>
+                <h2 class="project-category-title">GitHub Repositories</h2>
+                <div id="projects-grid" class="projects-grid">
+                    <p style="font-family: 'Fira Code'">Fetching public repositories from GitHub...</p>
                 </div>
             </div>
         </section>
@@ -30,5 +29,82 @@
     
     <script src="../assets/js/componentLoader.js" defer></script>
     <script src="../assets/js/main.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const githubUsername = 'Sl4cK0TH';
+            const apiUrl = `https://api.github.com/users/${githubUsername}/repos?sort=updated&direction=desc`;
+            const grid = document.getElementById('projects-grid');
+
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`GitHub API request failed: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // Filter out forked repositories
+                    const nonForkedRepos = data.filter(repo => !repo.fork);
+                    
+                    if (nonForkedRepos.length === 0) {
+                        grid.innerHTML = '<p>No public repositories found.</p>';
+                        return;
+                    }
+
+                    let html = '';
+                    nonForkedRepos.forEach(repo => {
+                        const description = repo.description || 'No description provided.';
+                        const language = repo.language || 'N/A';
+                        
+                        html += `
+                            <div class="project-card">
+                                <div class="card-header">
+                                    <i class="fab fa-github"></i>
+                                    <a href="${repo.html_url}" target="_blank" class="project-title">${repo.name}</a>
+                                </div>
+                                <p class="project-description">${description}</p>
+                                <div class="card-footer">
+                                    <span class="project-language">
+                                        <span class="lang-color-dot" style="background-color: getLanguageColor('${language}');"></span> ${language}
+                                    </span>
+                                    <span class="project-stars">
+                                        <i class="fas fa-star"></i> ${repo.stargazers_count}
+                                    </span>
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    grid.innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Error fetching GitHub repos:', error);
+                    grid.innerHTML = '<p class="error-message">Could not fetch projects from GitHub. Please try again later.</p>';
+                });
+
+            // A simple function to get a color based on language name
+            // Note: This is a basic implementation. A more robust solution might use a library or a larger color map.
+            function getLanguageColor(lang) {
+                const colors = {
+                    'JavaScript': '#f1e05a',
+                    'HTML': '#e34c26',
+                    'CSS': '#563d7c',
+                    'Python': '#3572A5',
+                    'Java': '#b07219',
+                    'TypeScript': '#2b7489',
+                    'C++': '#f34b7d',
+                    'C#': '#178600',
+                    'PHP': '#4F5D95',
+                    'Shell': '#89e051',
+                    'Go': '#00ADD8',
+                    'Rust': '#dea584',
+                    'Ruby': '#701516',
+                    'Default': '#ccc'
+                };
+                return colors[lang] || colors['Default'];
+            }
+        });
+    </script>
 </body>
 </html>

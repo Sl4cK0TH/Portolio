@@ -1,6 +1,6 @@
 .blog-container {
-    max-width: 900px; /* Adjusted for list view */
-    margin: 0 auto;
+    max-width: 1200px; /* Extended to fill more space */
+    margin: 0 auto; /* Centered */
     padding: 2rem;
 }
 
@@ -13,19 +13,21 @@
 
 /* Card Styling for List Layout */
 .blog-card {
-    background: rgba(255, 255, 255, 0.05); /* Slight transparency if you have a dark bg */
-    border: 1px solid #ddd; /* Adjust to #333 if dark mode */
+    background: #1a1f3a; /* Applied project card background */
+    border: 1px solid #00ff4150; /* Applied project card border */
     border-radius: 8px;
     overflow: hidden;
-    transition: transform 0.2s ease;
+    transition: all 0.3s ease; /* Changed to all 0.3s ease */
     display: flex;
     flex-direction: row; /* Main change for list layout */
     align-items: center; /* Vertically align image and content */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2); /* Applied project card shadow */
 }
 
 .blog-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transform: translateY(-5px); /* Keep the lift effect */
+    box-shadow: 0 10px 25px rgba(0, 255, 65, 0.2); /* Applied project card hover shadow */
+    border-color: #00ff41; /* Applied project card hover border color */
 }
 
 .blog-img {
