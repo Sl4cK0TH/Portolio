@@ -5,30 +5,162 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Achievements</title>
     <link rel="stylesheet" href="../assets/css/styles.css">
+    <link rel="stylesheet" href="../assets/css/achievements.css"> <!-- New stylesheet -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&family=Fira+Code:wght@400;700&display=swap" rel="stylesheet">
+    <!-- CDN for marked.js to parse Markdown -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 
 <body>
     <div id="header-placeholder"></div>
 
     <main>
-        <section class="coming-soon-section">
-            <div class="coming-soon-container">
+        <section class="achievements-section">
+            <div class="achievements-container">
                 <h1 class="section-title">./achievements</h1>
-                <p class="coming-soon-text">This page is currently under construction. Check back soon!</p>
-                <div class="loading-dots">
-                    <span></span>
-                    <span></span>
-                    <span></span>
+                <div id="achievements-grid" class="achievements-grid">
+                    <!-- Achievement cards will be injected here by JavaScript -->
                 </div>
             </div>
         </section>
     </main>
 
+    <!-- Modal Structure (hidden by default) -->
+    <div id="achievement-modal" class="modal-overlay" style="display: none;">
+        <div class="modal-content">
+            <button id="modal-close" class="modal-close-btn">&times;</button>
+            <div id="modal-body" class="modal-body-content">
+                <!-- Markdown content will be injected here -->
+            </div>
+        </div>
+    </div>
+
     <div id="footer-placeholder"></div>
     
     <script src="../assets/js/componentLoader.js" defer></script>
     <script src="../assets/js/main.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- DATA: Manually list your achievements here ---
+            const achievementsData = [
+                {
+                    title: 'AoC 2023', // Title for display
+                    // The path to the image for the card
+                    image: 'assets/achievements/001-AoC2023/image.jpg',
+                    // The path to the Markdown file for the modal details
+                    markdown: 'assets/achievements/001-AoC2023/DESCRIPTION.md'
+                },
+
+                {
+                    title: 'Web Fundamentals', // Title for display
+                    // The path to the image for the card
+                    image: 'assets/achievements/002-WebFund/image.jpg',
+                    // The path to the Markdown file for the modal details
+                    markdown: 'assets/achievements/002-WebFund/DESCRIPTION.md'
+                },
+
+                {
+                    title: 'Foundations of Cybersecurity', // Title for display
+                    // The path to the image for the card
+                    image: 'assets/achievements/003-CyberFund/image.jpg',
+                    // The path to the Markdown file for the modal details
+                    markdown: 'assets/achievements/003-CyberFund/DESCRIPTION.md'
+                },
+
+                {
+                    title: 'Technical Support Fundamentals', // Title for display
+                    // The path to the image for the card
+                    image: 'assets/achievements/004-TechSupport/image.jpg',
+                    // The path to the Markdown file for the modal details
+                    markdown: 'assets/achievements/004-TechSupport/DESCRIPTION.md'
+                },
+
+                {
+                    title: 'Jr Penetration Tester', // Title for display
+                    // The path to the image for the card
+                    image: 'assets/achievements/005-JrPenTester/image.jpg',
+                    // The path to the Markdown file for the modal details
+                    markdown: 'assets/achievements/005-JrPenTester/DESCRIPTION.md'
+                },
+                // Add more achievement objects here following the same structure
+                // {
+                //     title: 'Another Achievement',
+                //     image: 'assets/achievements/002-another-achievement/image.jpg',
+                //     markdown: 'assets/achievements/002-another-achievement/DESCRIPTION.md'
+                // }
+            ];
+
+            const grid = document.getElementById('achievements-grid');
+            const modal = document.getElementById('achievement-modal');
+            const modalBody = document.getElementById('modal-body');
+            const modalCloseBtn = document.getElementById('modal-close');
+
+            if (!grid || !modal) return;
+
+            // --- 1. Generate Achievement Cards ---
+            let cardsHtml = '';
+            if (achievementsData.length > 0) {
+                achievementsData.forEach((achievement, index) => {
+                    cardsHtml += `
+                        <div class="achievement-card" data-index="${index}">
+                            <img src="${achievement.image}" alt="${achievement.title}" class="card-image">
+                            <div class="card-title">${achievement.title}</div>
+                        </div>
+                    `;
+                });
+                grid.innerHTML = cardsHtml;
+            } else {
+                grid.innerHTML = '<p style="font-family: \'Fira Code\';">No achievements listed yet. Edit achievements/index.html to add some!</p>';
+            }
+
+            // --- 2. Setup Modal Logic ---
+            const cards = document.querySelectorAll('.achievement-card');
+            
+            cards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const index = card.getAttribute('data-index');
+                    const achievement = achievementsData[index];
+                    
+                    modalBody.innerHTML = '<p>Loading...</p>';
+                    modal.style.display = 'flex';
+
+                    // Fetch and parse the Markdown file
+                    fetch(achievement.markdown)
+                        .then(response => {
+                            if (!response.ok) {
+                                throw new Error('Network response was not ok');
+                            }
+                            return response.text();
+                        })
+                        .then(text => {
+                            // Prepend the image to the markdown content
+                            const imageHtml = `<img src="${achievement.image}" alt="${achievement.title}" class="modal-main-image">`;
+                            modalBody.innerHTML = imageHtml + marked.parse(text);
+                        })
+                        .catch(error => {
+                            console.error('Error fetching markdown:', error);
+                            modalBody.innerHTML = '<p class="error-message">Could not load achievement details.</p>';
+                        });
+                });
+            });
+
+            // Function to close the modal
+            const closeModal = () => {
+                modal.style.display = 'none';
+                modalBody.innerHTML = ''; // Clear content
+            };
+
+            // Event listeners to close the modal
+            modalCloseBtn.addEventListener('click', closeModal);
+            modal.addEventListener('click', (event) => {
+                // Close if the overlay (the modal itself) is clicked, but not its children
+                if (event.target === modal) {
+                    closeModal();
+                }
+            });
+        });
+    </script>
 </body>
 </html>
