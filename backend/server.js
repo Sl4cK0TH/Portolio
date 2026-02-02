@@ -8,6 +8,9 @@ const { Octokit } = require('octokit');
 const app = express();
 const PORT = process.env.PORT || 3001;
 
+// Trust proxy (required for Render and other PaaS platforms)
+app.set('trust proxy', 1);
+
 // Environment variables (set in Render dashboard)
 const {
   GITHUB_CLIENT_ID,
@@ -45,12 +48,12 @@ function requireAuth(req, res, next) {
   if (!token) {
     return res.status(401).json({ error: 'Not authenticated' });
   }
-  
+
   const payload = verifyToken(token);
   if (!payload) {
     return res.status(401).json({ error: 'Invalid token' });
   }
-  
+
   req.user = payload;
   next();
 }
@@ -68,11 +71,11 @@ app.get('/auth/github', (req, res) => {
 // GitHub OAuth callback
 app.get('/auth/callback', async (req, res) => {
   const { code } = req.query;
-  
+
   if (!code) {
     return res.redirect(`${FRONTEND_URL}/adm-mgmt/?error=no_code`);
   }
-  
+
   try {
     // Exchange code for access token
     const tokenResponse = await fetch('https://github.com/login/oauth/access_token', {
@@ -87,15 +90,15 @@ app.get('/auth/callback', async (req, res) => {
         code
       })
     });
-    
+
     const tokenData = await tokenResponse.json();
-    
+
     if (tokenData.error) {
       return res.redirect(`${FRONTEND_URL}/adm-mgmt/?error=token_error`);
     }
-    
+
     const accessToken = tokenData.access_token;
-    
+
     // Get user info
     const userResponse = await fetch('https://api.github.com/user', {
       headers: {
@@ -103,21 +106,21 @@ app.get('/auth/callback', async (req, res) => {
         'Accept': 'application/vnd.github.v3+json'
       }
     });
-    
+
     const userData = await userResponse.json();
-    
+
     // Check if user is allowed
     if (userData.login !== GITHUB_ALLOWED_USER) {
       return res.redirect(`${FRONTEND_URL}/adm-mgmt/?error=unauthorized`);
     }
-    
+
     // Create JWT token
     const token = createToken({
       username: userData.login,
       avatar: userData.avatar_url,
       accessToken: accessToken
     });
-    
+
     // Set cookie and redirect
     res.cookie('auth_token', token, {
       httpOnly: true,
@@ -125,9 +128,9 @@ app.get('/auth/callback', async (req, res) => {
       sameSite: 'lax',
       maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
     });
-    
+
     res.redirect(`${FRONTEND_URL}/adm-mgmt/?success=true`);
-    
+
   } catch (error) {
     console.error('Auth error:', error);
     res.redirect(`${FRONTEND_URL}/adm-mgmt/?error=server_error`);
@@ -154,28 +157,28 @@ app.post('/auth/logout', (req, res) => {
 app.get('/api/content/:file', requireAuth, async (req, res) => {
   const { file } = req.params;
   const allowedFiles = ['achievements.json', 'site.json', 'about.json'];
-  
+
   if (!allowedFiles.includes(file)) {
     return res.status(400).json({ error: 'File not allowed' });
   }
-  
+
   try {
     const octokit = new Octokit({ auth: req.user.accessToken });
     const [owner, repo] = GITHUB_REPO.split('/');
-    
+
     const response = await octokit.rest.repos.getContent({
       owner,
       repo,
       path: `data/${file}`
     });
-    
+
     const content = Buffer.from(response.data.content, 'base64').toString('utf-8');
-    
+
     res.json({
       content: JSON.parse(content),
       sha: response.data.sha
     });
-    
+
   } catch (error) {
     console.error('Get content error:', error);
     if (error.status === 404) {
@@ -190,15 +193,15 @@ app.put('/api/content/:file', requireAuth, async (req, res) => {
   const { file } = req.params;
   const { content, sha, message } = req.body;
   const allowedFiles = ['achievements.json', 'site.json', 'about.json'];
-  
+
   if (!allowedFiles.includes(file)) {
     return res.status(400).json({ error: 'File not allowed' });
   }
-  
+
   try {
     const octokit = new Octokit({ auth: req.user.accessToken });
     const [owner, repo] = GITHUB_REPO.split('/');
-    
+
     const response = await octokit.rest.repos.createOrUpdateFileContents({
       owner,
       repo,
@@ -207,13 +210,13 @@ app.put('/api/content/:file', requireAuth, async (req, res) => {
       content: Buffer.from(JSON.stringify(content, null, 2)).toString('base64'),
       sha: sha
     });
-    
+
     res.json({
       success: true,
       sha: response.data.content.sha,
       commit: response.data.commit.sha
     });
-    
+
   } catch (error) {
     console.error('Update content error:', error);
     res.status(500).json({ error: 'Failed to update content' });
@@ -223,16 +226,16 @@ app.put('/api/content/:file', requireAuth, async (req, res) => {
 // Upload image to repo
 app.post('/api/upload', requireAuth, async (req, res) => {
   const { path, content, message } = req.body;
-  
+
   // Validate path (must be in achievements assets)
   if (!path.startsWith('achievements/assets/achievements/')) {
     return res.status(400).json({ error: 'Invalid upload path' });
   }
-  
+
   try {
     const octokit = new Octokit({ auth: req.user.accessToken });
     const [owner, repo] = GITHUB_REPO.split('/');
-    
+
     // Check if file exists (to get SHA for update)
     let sha;
     try {
@@ -245,7 +248,7 @@ app.post('/api/upload', requireAuth, async (req, res) => {
     } catch (e) {
       // File doesn't exist, that's fine
     }
-    
+
     const response = await octokit.rest.repos.createOrUpdateFileContents({
       owner,
       repo,
@@ -254,13 +257,13 @@ app.post('/api/upload', requireAuth, async (req, res) => {
       content: content, // Already base64 encoded
       sha: sha
     });
-    
+
     res.json({
       success: true,
       path: path,
       sha: response.data.content.sha
     });
-    
+
   } catch (error) {
     console.error('Upload error:', error);
     res.status(500).json({ error: 'Failed to upload file' });
