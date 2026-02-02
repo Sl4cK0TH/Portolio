@@ -79,6 +79,8 @@ async function apiRequest(endpoint, options = {}) {
 }
 
 // ===== Authentication =====
+let authPopup = null;
+
 async function checkAuth() {
     try {
         const user = await apiRequest('/auth/user');
@@ -88,6 +90,28 @@ async function checkAuth() {
     } catch {
         showLoginScreen();
     }
+}
+
+function openAuthPopup() {
+    const width = 600;
+    const height = 700;
+    const left = window.screenX + (window.outerWidth - width) / 2;
+    const top = window.screenY + (window.outerHeight - height) / 2;
+
+    authPopup = window.open(
+        `${API_BASE_URL}/auth/github`,
+        'GitHub Login',
+        `width=${width},height=${height},left=${left},top=${top}`
+    );
+
+    // Check if popup was closed or auth completed
+    const checkPopup = setInterval(() => {
+        if (authPopup && authPopup.closed) {
+            clearInterval(checkPopup);
+            // Check if we're now authenticated
+            checkAuth();
+        }
+    }, 500);
 }
 
 function showLoginScreen() {
@@ -589,7 +613,7 @@ async function saveAboutForm(e) {
 function initEventListeners() {
     // Auth
     elements.githubLoginBtn.addEventListener('click', () => {
-        window.location.href = `${API_BASE_URL}/auth/github`;
+        openAuthPopup();
     });
 
     elements.logoutBtn.addEventListener('click', logout);
