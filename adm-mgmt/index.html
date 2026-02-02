@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel - Portfolio Management</title>
+    <link rel="stylesheet" href="assets/css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-container">
+            <div class="login-logo">
+                <i class="fas fa-terminal"></i>
+            </div>
+            <h1 class="login-title">Portfolio Admin</h1>
+            <p class="login-subtitle">Manage your portfolio content</p>
+            <button id="github-login-btn" class="github-login-btn">
+                <i class="fab fa-github"></i>
+                Login with GitHub
+            </button>
+            <p id="login-error" class="login-error"></p>
+        </div>
+    </div>
+
+    <!-- Main Admin Panel -->
+    <div id="admin-panel" class="admin-panel" style="display: none;">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-terminal"></i>
+                <span>Admin Panel</span>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="#" class="nav-item active" data-section="dashboard">
+                    <i class="fas fa-th-large"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="#" class="nav-item" data-section="achievements">
+                    <i class="fas fa-trophy"></i>
+                    <span>Achievements</span>
+                </a>
+                <a href="#" class="nav-item" data-section="site">
+                    <i class="fas fa-home"></i>
+                    <span>Home Page</span>
+                </a>
+                <a href="#" class="nav-item" data-section="about">
+                    <i class="fas fa-user"></i>
+                    <span>About Page</span>
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <img id="user-avatar" src="" alt="User" class="user-avatar">
+                    <span id="user-name"></span>
+                </div>
+                <button id="logout-btn" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard Section -->
+            <section id="section-dashboard" class="content-section active">
+                <h1 class="section-title">Dashboard</h1>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <i class="fas fa-trophy"></i>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-achievements">0</span>
+                            <span class="stat-label">Achievements</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-quote-right"></i>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-quotes">0</span>
+                            <span class="stat-label">Quotes</span>
+                        </div>
+                    </div>
+                    <div class="stat-card">
+                        <i class="fas fa-code"></i>
+                        <div class="stat-info">
+                            <span class="stat-value" id="stat-skills">0</span>
+                            <span class="stat-label">Skills</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="quick-actions">
+                    <h2>Quick Actions</h2>
+                    <div class="actions-grid">
+                        <button class="action-btn" data-goto="achievements">
+                            <i class="fas fa-plus"></i>
+                            Add Achievement
+                        </button>
+                        <button class="action-btn" data-goto="site">
+                            <i class="fas fa-edit"></i>
+                            Edit Home Page
+                        </button>
+                        <button class="action-btn" data-goto="about">
+                            <i class="fas fa-user-edit"></i>
+                            Edit About Page
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Achievements Section -->
+            <section id="section-achievements" class="content-section">
+                <div class="section-header">
+                    <h1 class="section-title">Achievements</h1>
+                    <button id="add-achievement-btn" class="primary-btn">
+                        <i class="fas fa-plus"></i> Add New
+                    </button>
+                </div>
+                <div id="achievements-list" class="achievements-list">
+                    <!-- Achievement cards will be rendered here -->
+                </div>
+            </section>
+
+            <!-- Site/Home Section -->
+            <section id="section-site" class="content-section">
+                <h1 class="section-title">Home Page Settings</h1>
+                <form id="site-form" class="admin-form">
+                    <div class="form-section">
+                        <h2>Hero Section</h2>
+                        <div class="form-group">
+                            <label for="hero-title">Title</label>
+                            <input type="text" id="hero-title" name="title">
+                        </div>
+                        <div class="form-group">
+                            <label for="hero-name">Your Name</label>
+                            <input type="text" id="hero-name" name="name">
+                        </div>
+                        <div class="form-group">
+                            <label for="hero-description">Description</label>
+                            <textarea id="hero-description" name="description" rows="3"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h2>Social Links</h2>
+                        <div id="social-links-container">
+                            <!-- Social links will be rendered here -->
+                        </div>
+                        <button type="button" id="add-social-btn" class="secondary-btn">
+                            <i class="fas fa-plus"></i> Add Social Link
+                        </button>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h2>Quotes</h2>
+                        <div id="quotes-container">
+                            <!-- Quotes will be rendered here -->
+                        </div>
+                        <button type="button" id="add-quote-btn" class="secondary-btn">
+                            <i class="fas fa-plus"></i> Add Quote
+                        </button>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="primary-btn">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </form>
+            </section>
+
+            <!-- About Section -->
+            <section id="section-about" class="content-section">
+                <h1 class="section-title">About Page Settings</h1>
+                <form id="about-form" class="admin-form">
+                    <div class="form-section">
+                        <h2>Profile Information</h2>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="profile-firstName">First Name</label>
+                                <input type="text" id="profile-firstName" name="firstName">
+                            </div>
+                            <div class="form-group">
+                                <label for="profile-lastName">Last Name</label>
+                                <input type="text" id="profile-lastName" name="lastName">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="profile-pseudonym">Pseudonym</label>
+                                <input type="text" id="profile-pseudonym" name="pseudonym">
+                            </div>
+                            <div class="form-group">
+                                <label for="profile-age">Age</label>
+                                <input type="number" id="profile-age" name="age">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-tagline">Tagline</label>
+                            <input type="text" id="profile-tagline" name="tagline">
+                        </div>
+                        <div class="form-group">
+                            <label for="profile-bio">Bio</label>
+                            <textarea id="profile-bio" name="bio" rows="5"></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <h2>Skills</h2>
+                        <div id="skills-container">
+                            <!-- Skills will be rendered here -->
+                        </div>
+                        <button type="button" id="add-skill-btn" class="secondary-btn">
+                            <i class="fas fa-plus"></i> Add Skill
+                        </button>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="submit" class="primary-btn">
+                            <i class="fas fa-save"></i> Save Changes
+                        </button>
+                    </div>
+                </form>
+            </section>
+        </main>
+    </div>
+
+    <!-- Achievement Modal -->
+    <div id="achievement-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title">Add Achievement</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <form id="achievement-form" class="admin-form">
+                <input type="hidden" id="achievement-id" name="id">
+                <input type="hidden" id="achievement-sha" name="sha">
+                
+                <div class="form-group">
+                    <label for="achievement-title">Title *</label>
+                    <input type="text" id="achievement-title" name="title" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="achievement-date">Date</label>
+                        <input type="text" id="achievement-date" name="date" placeholder="e.g. December 2023">
+                    </div>
+                    <div class="form-group">
+                        <label for="achievement-issuedBy">Issued By</label>
+                        <input type="text" id="achievement-issuedBy" name="issuedBy">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="achievement-description">Description</label>
+                    <textarea id="achievement-description" name="description" rows="3"></textarea>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="achievement-credentialId">Credential ID</label>
+                        <input type="text" id="achievement-credentialId" name="credentialId">
+                    </div>
+                    <div class="form-group">
+                        <label for="achievement-credentialLink">Credential Link</label>
+                        <input type="url" id="achievement-credentialLink" name="credentialLink">
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="achievement-image">Certificate Image</label>
+                    <div class="image-upload-area" id="image-upload-area">
+                        <input type="file" id="achievement-image" name="image" accept="image/*" hidden>
+                        <div class="upload-placeholder">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                            <span>Click to upload or drag and drop</span>
+                        </div>
+                        <img id="image-preview" src="" alt="Preview" style="display: none;">
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="button" class="secondary-btn modal-cancel">Cancel</button>
+                    <button type="submit" class="primary-btn">
+                        <i class="fas fa-save"></i> Save
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay" style="display: none;">
+        <div class="spinner"></div>
+    </div>
+
+    <script src="assets/js/admin.js"></script>
+</body>
+</html>

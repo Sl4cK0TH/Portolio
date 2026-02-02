@@ -1,0 +1,52 @@
+[
+  {
+    "id": "001-AoC2023",
+    "title": "Advent of Cyber 2023",
+    "image": "achievements/assets/achievements/001-AoC2023/image.jpg",
+    "date": "December 2023",
+    "description": "This is the official Certificate of Completion and Badge for TryHackMe's annual 24 Days of Advent of Cyber 2023. I have been acknowledged for completing all 24 challenges in 24 days.",
+    "issuedBy": "TryHackMe",
+    "credentialId": "THM-PCFBS9PLYY",
+    "credentialLink": "https://tryhackme-certificates.s3-eu-west-1.amazonaws.com/THM-PCFBS9PLYY.pdf"
+  },
+  {
+    "id": "002-WebFund",
+    "title": "Web Fundamentals",
+    "image": "achievements/assets/achievements/002-WebFund/image.jpg",
+    "date": "January 2024",
+    "description": "This is the official Certificate of Completion for completing the Web Fundamentals Learning Path in TryHackMe.",
+    "issuedBy": "TryHackMe",
+    "credentialId": "THM-VXWRGEHSMZ",
+    "credentialLink": "https://tryhackme.com/certificate/THM-VXWRGEHSMZ"
+  },
+  {
+    "id": "003-CyberFund",
+    "title": "Foundations of Cybersecurity",
+    "image": "achievements/assets/achievements/003-CyberFund/image.jpg",
+    "date": "May 2024",
+    "description": "I have been awarded a Certificate of Completion for completing the Foundations of Cybersecurity course in Coursera.",
+    "issuedBy": "Coursera, Google",
+    "credentialId": "P9ME2DDVCPDE",
+    "credentialLink": "https://www.coursera.org/verify/P9ME2DDVCPDE"
+  },
+  {
+    "id": "004-TechSupport",
+    "title": "Technical Support Fundamentals",
+    "image": "achievements/assets/achievements/004-TechSupport/image.jpg",
+    "date": "August 2024",
+    "description": "I have been awarded a Certificate of Completion for completing the Technical Support Fundamentals course in Coursera.",
+    "issuedBy": "Coursera, Google",
+    "credentialId": "7DDLFWA09O0H",
+    "credentialLink": "https://www.coursera.org/verify/7DDLFWA09O0H"
+  },
+  {
+    "id": "005-JrPenTester",
+    "title": "Jr Penetration Tester",
+    "image": "achievements/assets/achievements/005-JrPenTester/image.jpg",
+    "date": "November 2024",
+    "description": "This is the official Certificate of Completion for completing the Jr Penetration Tester Learning Path in TryHackMe.",
+    "issuedBy": "TryHackMe",
+    "credentialId": "THM-LAJXCBI3T1",
+    "credentialLink": "https://tryhackme.com/certificate/THM-LAJXCBI3T1"
+  }
+]

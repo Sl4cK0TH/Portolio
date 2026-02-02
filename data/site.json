@@ -1,0 +1,52 @@
+{
+    "hero": {
+        "title": "Cybersecurity Researcher",
+        "name": "Van Glenndon Enad",
+        "description": "a 24 year old Junior Cybersecurity Researcher in search for an internship around Metro Manila.",
+        "profileImage": "assets/images/profile.jpg"
+    },
+    "socialLinks": [
+        {
+            "platform": "facebook",
+            "url": "https://facebook.com/iheardsomething",
+            "icon": "fab fa-facebook-f"
+        },
+        {
+            "platform": "instagram",
+            "url": "https://www.instagram.com/vansofdwall/",
+            "icon": "fab fa-instagram"
+        },
+        {
+            "platform": "linkedin",
+            "url": "https://www.linkedin.com/in/van-glenndon-enad-745a2b19a/",
+            "icon": "fab fa-linkedin-in"
+        },
+        {
+            "platform": "email",
+            "url": "mailto:davidbelle772@gmail.com",
+            "icon": "fas fa-envelope"
+        }
+    ],
+    "quotes": [
+        {
+            "text": "The only way to do great work is to love what you do.",
+            "author": "Steve Jobs"
+        },
+        {
+            "text": "Hack the planet!",
+            "author": "Hackers (1995)"
+        },
+        {
+            "text": "Security is not a product, but a process.",
+            "author": "Bruce Schneier"
+        },
+        {
+            "text": "There are only two types of companies: those that have been hacked, and those that will be.",
+            "author": "Robert Mueller"
+        },
+        {
+            "text": "The quieter you become, the more you are able to hear.",
+            "author": "Kali Linux"
+        }
+    ]
+}
