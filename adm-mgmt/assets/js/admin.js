@@ -1,6 +1,6 @@
 // ===== Configuration =====
 // IMPORTANT: Update this URL after deploying your backend to Render
-const API_BASE_URL = 'https://your-backend-service.onrender.com';
+const API_BASE_URL = 'https://portolio-admin-backend.onrender.com';
 
 // ===== State =====
 let state = {
