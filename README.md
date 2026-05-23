@@ -1,4 +1,4 @@
-# Van Glenndon Enad - Cybersecurity Portfolio
+# Zor0ark - Cybersecurity Portfolio
 
 A dark-themed, hacker-inspired portfolio website showcasing my work as a Cybersecurity Researcher and Ethical Hacker.
 
@@ -97,7 +97,7 @@ http://localhost:8000
 
 ## 📄 License
 
-© 2025 Van Glenndon Enad. All Rights Reserved.
+© 2025 Zor0ark. All Rights Reserved.
 
 ## 🤝 Connect With Me
 
@@ -108,4 +108,4 @@ http://localhost:8000
 
 ---
 
-**Built with 💚 by Van Glenndon Enad**
+**Built with 💚 by Zor0ark**
