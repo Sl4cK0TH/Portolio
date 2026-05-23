@@ -9,6 +9,59 @@
     margin: 0 auto;
 }
 
+.achievements-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+}
+
+.achievements-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+}
+
+.filter-chip {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.8rem;
+    color: #00d9ff;
+    background: rgba(0, 217, 255, 0.08);
+    border: 1px solid #00ff4150;
+    padding: 0.3rem 0.7rem;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.filter-chip.active,
+.filter-chip:hover {
+    color: #0a0e27;
+    background: #00ff41;
+    border-color: #00ff41;
+    box-shadow: 0 0 12px rgba(0, 255, 65, 0.4);
+}
+
+.achievements-sort {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: 'Fira Code', monospace;
+    color: #e0e0e0;
+    font-size: 0.85rem;
+}
+
+.achievements-sort select {
+    background: #0a0e27;
+    color: #00d9ff;
+    border: 1px solid #00ff4150;
+    border-radius: 6px;
+    padding: 0.35rem 0.6rem;
+    font-family: 'Fira Code', monospace;
+}
+
 .achievements-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -46,8 +99,33 @@
     font-size: 1.1rem;
     font-weight: 600;
     color: #e0e0e0; /* var(--text-white) */
+    text-align: left;
+}
+
+.achievement-card .card-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
     padding: 1.5rem;
-    text-align: center;
+}
+
+.card-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    font-family: 'Fira Code', monospace;
+    font-size: 0.8rem;
+    color: #e0e0e080;
+}
+
+.card-meta .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.card-meta i {
+    color: #00d9ff;
 }
 
 /* Modal Styles */

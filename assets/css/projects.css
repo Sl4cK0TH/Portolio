@@ -9,6 +9,21 @@
     margin: 0 auto; /* Centered */
 }
 
+.projects-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: 1rem;
+    gap: 1rem;
+}
+
+.projects-summary {
+    font-family: 'Fira Code', monospace;
+    color: #e0e0e0;
+    opacity: 0.8;
+    font-size: 0.95rem;
+}
+
 .project-category-title {
     font-family: 'Fira Code', monospace;
     font-size: 1.5rem;
@@ -19,8 +34,8 @@
 }
 
 .projects-grid {
-    display: flex; /* Changed to flex */
-    flex-direction: column; /* Changed to column for list view */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 2rem;
     margin-top: 2rem;
 }
@@ -31,7 +46,8 @@
     border-radius: 8px;
     padding: 1.5rem;
     display: flex;
-    flex-direction: column; /* Already column, good for content inside card */
+    flex-direction: column;
+    gap: 0.8rem;
     transition: all 0.3s ease;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
@@ -46,7 +62,7 @@
     display: flex;
     align-items: center;
     gap: 1rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.3rem;
 }
 
 .project-card .card-header .fa-github {
@@ -71,23 +87,46 @@
     color: #e0e0e0; /* var(--text-white) */
     font-size: 0.9rem;
     line-height: 1.6;
-    flex-grow: 1; /* Pushes footer to the bottom */
-    margin-bottom: 1.5rem;
+    flex-grow: 1;
+}
+
+.project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.tag-chip {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.75rem;
+    color: #00d9ff;
+    border: 1px solid #00ff4150;
+    padding: 0.2rem 0.5rem;
+    border-radius: 999px;
+    background: rgba(0, 217, 255, 0.08);
 }
 
 .project-card .card-footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 0.6rem;
     font-family: 'Fira Code', monospace;
     font-size: 0.8rem;
     color: #e0e0e080; /* Lighter text white */
 }
 
-.project-language, .project-stars {
+.project-language,
+.project-stars,
+.project-updated {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+}
+
+.project-updated i {
+    color: #00d9ff;
 }
 
 .lang-color-dot {
@@ -99,6 +138,43 @@
 
 .project-stars .fa-star {
     color: #f1e05a; /* A gold-like color for stars */
+}
+
+.project-actions {
+    display: flex;
+    gap: 0.8rem;
+    flex-wrap: wrap;
+    margin-top: 0.4rem;
+}
+
+.project-action {
+    font-family: 'Fira Code', monospace;
+    font-size: 0.85rem;
+    color: #0a0e27;
+    background: #00ff41;
+    border: 1px solid #00ff41;
+    padding: 0.35rem 0.8rem;
+    border-radius: 6px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.project-action.secondary {
+    color: #00d9ff;
+    background: transparent;
+    border-color: #00d9ff;
+}
+
+.project-action:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0 12px rgba(0, 255, 65, 0.4);
+}
+
+.project-action.secondary:hover {
+    box-shadow: 0 0 12px rgba(0, 217, 255, 0.4);
 }
 
 .error-message {

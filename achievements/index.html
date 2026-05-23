@@ -22,6 +22,16 @@
         <section class="achievements-section">
             <div class="achievements-container">
                 <h1 class="section-title">./achievements</h1>
+                <div class="achievements-toolbar">
+                    <div class="achievements-filters" id="achievement-filters"></div>
+                    <div class="achievements-sort">
+                        <label for="achievement-sort">Sort</label>
+                        <select id="achievement-sort" aria-label="Sort achievements">
+                            <option value="newest">Newest</option>
+                            <option value="oldest">Oldest</option>
+                        </select>
+                    </div>
+                </div>
                 <div id="achievements-grid" class="achievements-grid">
                     <!-- Achievement cards will be injected here by JavaScript -->
                 </div>
@@ -50,6 +60,8 @@
             const modal = document.getElementById('achievement-modal');
             const modalBody = document.getElementById('modal-body');
             const modalCloseBtn = document.getElementById('modal-close');
+            const filtersContainer = document.getElementById('achievement-filters');
+            const sortSelect = document.getElementById('achievement-sort');
 
             if (!grid || !modal) return;
 
@@ -65,44 +77,123 @@
                 return;
             }
 
-            // --- 1. Generate Achievement Cards ---
-            let cardsHtml = '';
-            if (achievementsData.length > 0) {
-                achievementsData.forEach((achievement, index) => {
-                    cardsHtml += `
-                        <div class="achievement-card" data-index="${index}">
-                            <img src="../${achievement.image}" alt="${achievement.title}" class="card-image">
-                            <div class="card-title">${achievement.title}</div>
-                        </div>
-                    `;
+            const parseAchievementDate = (value) => {
+                if (!value) return 0;
+                const direct = Date.parse(value);
+                if (!Number.isNaN(direct)) return direct;
+                const withDay = Date.parse(`${value} 1`);
+                return Number.isNaN(withDay) ? 0 : withDay;
+            };
+
+            let activeIssuer = 'All';
+
+            const buildFilters = () => {
+                if (!filtersContainer) return;
+                const issuers = achievementsData
+                    .map(item => item.issuedBy)
+                    .filter(Boolean);
+                const uniqueIssuers = Array.from(new Set(issuers)).sort();
+                const allFilters = ['All', ...uniqueIssuers];
+
+                filtersContainer.innerHTML = allFilters.map(issuer => `
+                    <button class="filter-chip ${issuer === activeIssuer ? 'active' : ''}" data-issuer="${issuer}" aria-pressed="${issuer === activeIssuer}">
+                        ${issuer}
+                    </button>
+                `).join('');
+            };
+
+            const renderAchievements = () => {
+                if (!achievementsData.length) {
+                    grid.innerHTML = '<p style="font-family: \'Fira Code\';">No achievements listed yet.</p>';
+                    return;
+                }
+
+                const filtered = activeIssuer === 'All'
+                    ? achievementsData
+                    : achievementsData.filter(item => item.issuedBy === activeIssuer);
+
+                const sortOrder = sortSelect ? sortSelect.value : 'newest';
+                const sorted = [...filtered].sort((a, b) => {
+                    const aDate = parseAchievementDate(a.date);
+                    const bDate = parseAchievementDate(b.date);
+                    return sortOrder === 'oldest' ? aDate - bDate : bDate - aDate;
                 });
+
+                const cardsHtml = sorted.map(achievement => `
+                    <div class="achievement-card" data-id="${achievement.id}">
+                        <img src="../${achievement.image}" alt="${achievement.title}" class="card-image">
+                        <div class="card-body">
+                            <div class="card-title">${achievement.title}</div>
+                            <div class="card-meta">
+                                <span class="meta-item"><i class="far fa-calendar"></i> ${achievement.date || 'N/A'}</span>
+                                <span class="meta-item"><i class="fas fa-building-columns"></i> ${achievement.issuedBy || 'N/A'}</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
                 grid.innerHTML = cardsHtml;
-            } else {
-                grid.innerHTML = '<p style="font-family: \'Fira Code\';">No achievements listed yet.</p>';
+            };
+
+            buildFilters();
+            renderAchievements();
+
+            if (filtersContainer) {
+                filtersContainer.addEventListener('click', (event) => {
+                    const chip = event.target.closest('.filter-chip');
+                    if (!chip) return;
+                    activeIssuer = chip.getAttribute('data-issuer') || 'All';
+                    filtersContainer.querySelectorAll('.filter-chip').forEach(button => {
+                        const isActive = button.getAttribute('data-issuer') === activeIssuer;
+                        button.classList.toggle('active', isActive);
+                        button.setAttribute('aria-pressed', String(isActive));
+                    });
+                    renderAchievements();
+                });
+            }
+
+            if (sortSelect) {
+                sortSelect.addEventListener('change', renderAchievements);
             }
 
             // --- 2. Setup Modal Logic ---
-            const cards = document.querySelectorAll('.achievement-card');
+            grid.addEventListener('click', async (event) => {
+                const card = event.target.closest('.achievement-card');
+                if (!card) return;
+                const targetId = card.getAttribute('data-id');
+                const achievement = achievementsData.find(item => item.id === targetId);
+                if (!achievement) return;
 
-            cards.forEach(card => {
-                card.addEventListener('click', () => {
-                    const index = card.getAttribute('data-index');
-                    const achievement = achievementsData[index];
+                let descriptionHtml = '';
+                if (achievement.descriptionPath) {
+                    try {
+                        const mdResponse = await fetch(`../${achievement.descriptionPath}`);
+                        if (mdResponse.ok) {
+                            const mdText = await mdResponse.text();
+                            descriptionHtml = marked.parse(mdText);
+                        }
+                    } catch (error) {
+                        console.warn('Failed to load markdown description:', error);
+                    }
+                }
 
-                    // Build modal content from JSON data
-                    const modalContent = `
-                        <img src="../${achievement.image}" alt="${achievement.title}" class="modal-main-image">
-                        <h1>${achievement.title}</h1>
-                        <p><strong>Date:</strong> ${achievement.date || 'N/A'}</p>
-                        <p><strong>Issued By:</strong> ${achievement.issuedBy || 'N/A'}</p>
-                        <p>${achievement.description || ''}</p>
-                        ${achievement.credentialId ? `<p><strong>Credential ID:</strong> ${achievement.credentialId}</p>` : ''}
-                        ${achievement.credentialLink ? `<p><a href="${achievement.credentialLink}" target="_blank" rel="noopener">View Certificate</a></p>` : ''}
-                    `;
+                if (!descriptionHtml && achievement.description) {
+                    descriptionHtml = `<p>${achievement.description}</p>`;
+                }
 
-                    modalBody.innerHTML = modalContent;
-                    modal.style.display = 'flex';
-                });
+                // Build modal content from JSON data
+                const modalContent = `
+                    <img src="../${achievement.image}" alt="${achievement.title}" class="modal-main-image">
+                    <h1>${achievement.title}</h1>
+                    <p><strong>Date:</strong> ${achievement.date || 'N/A'}</p>
+                    <p><strong>Issued By:</strong> ${achievement.issuedBy || 'N/A'}</p>
+                    ${descriptionHtml}
+                    ${achievement.credentialId ? `<p><strong>Credential ID:</strong> ${achievement.credentialId}</p>` : ''}
+                    ${achievement.credentialLink ? `<p><a href="${achievement.credentialLink}" target="_blank" rel="noopener">View Certificate</a></p>` : ''}
+                `;
+
+                modalBody.innerHTML = modalContent;
+                modal.style.display = 'flex';
             });
 
             // Function to close the modal
