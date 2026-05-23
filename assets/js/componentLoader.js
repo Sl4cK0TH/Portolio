@@ -47,6 +47,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
 
+            const assetElements = headerPlaceholder.querySelectorAll('[data-asset]');
+            assetElements.forEach((el) => {
+                const assetPath = el.getAttribute('data-asset');
+                if (!assetPath) return;
+                if (el.tagName.toLowerCase() === 'img') {
+                    el.setAttribute('src', buildPath(assetPath));
+                }
+            });
+
             // Re-initialize main.js functions that depend on header presence
             if (typeof setupMobileMenu === 'function') {
                 setupMobileMenu();
