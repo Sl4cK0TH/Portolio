@@ -26,6 +26,132 @@ if (glitchTitle) {
     }, 5000);
 }
 
+// Neural background animation
+function initNeuralBackground() {
+    if (!document.body) return;
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        return;
+    }
+
+    const canvas = document.createElement('canvas');
+    canvas.className = 'neural-bg';
+    document.body.prepend(canvas);
+
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    const mouse = { x: 0, y: 0, active: false };
+    const nodeColor = 'rgba(0, 217, 255, 0.7)';
+    const lineColor = 'rgba(0, 255, 65, 0.25)';
+    const mouseLineColor = 'rgba(0, 217, 255, 0.35)';
+    const maxDistance = 140;
+    const maxMouseDistance = 180;
+    const speed = 0.35;
+    let nodes = [];
+    let width = 0;
+    let height = 0;
+    let dpr = window.devicePixelRatio || 1;
+
+    const createNode = () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * speed,
+        vy: (Math.random() - 0.5) * speed
+    });
+
+    const resize = () => {
+        width = window.innerWidth;
+        height = window.innerHeight;
+        dpr = window.devicePixelRatio || 1;
+        canvas.width = width * dpr;
+        canvas.height = height * dpr;
+        canvas.style.width = `${width}px`;
+        canvas.style.height = `${height}px`;
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+        const targetCount = Math.min(90, Math.max(45, Math.floor((width * height) / 22000)));
+        if (nodes.length < targetCount) {
+            while (nodes.length < targetCount) nodes.push(createNode());
+        } else if (nodes.length > targetCount) {
+            nodes = nodes.slice(0, targetCount);
+        }
+    };
+
+    const drawLines = () => {
+        for (let i = 0; i < nodes.length; i++) {
+            for (let j = i + 1; j < nodes.length; j++) {
+                const dx = nodes[i].x - nodes[j].x;
+                const dy = nodes[i].y - nodes[j].y;
+                const dist = Math.hypot(dx, dy);
+                if (dist < maxDistance) {
+                    const alpha = 1 - dist / maxDistance;
+                    ctx.strokeStyle = lineColor.replace('0.25', (0.25 * alpha).toFixed(3));
+                    ctx.lineWidth = 1;
+                    ctx.beginPath();
+                    ctx.moveTo(nodes[i].x, nodes[i].y);
+                    ctx.lineTo(nodes[j].x, nodes[j].y);
+                    ctx.stroke();
+                }
+            }
+
+            if (mouse.active) {
+                const dx = nodes[i].x - mouse.x;
+                const dy = nodes[i].y - mouse.y;
+                const dist = Math.hypot(dx, dy);
+                if (dist < maxMouseDistance) {
+                    const alpha = 1 - dist / maxMouseDistance;
+                    ctx.strokeStyle = mouseLineColor.replace('0.35', (0.35 * alpha).toFixed(3));
+                    ctx.lineWidth = 1.2;
+                    ctx.beginPath();
+                    ctx.moveTo(nodes[i].x, nodes[i].y);
+                    ctx.lineTo(mouse.x, mouse.y);
+                    ctx.stroke();
+                }
+            }
+        }
+    };
+
+    const drawNodes = () => {
+        ctx.fillStyle = nodeColor;
+        nodes.forEach(node => {
+            ctx.beginPath();
+            ctx.arc(node.x, node.y, 1.8, 0, Math.PI * 2);
+            ctx.fill();
+        });
+    };
+
+    const update = () => {
+        ctx.clearRect(0, 0, width, height);
+
+        nodes.forEach(node => {
+            node.x += node.vx;
+            node.y += node.vy;
+
+            if (node.x <= 0 || node.x >= width) node.vx *= -1;
+            if (node.y <= 0 || node.y >= height) node.vy *= -1;
+        });
+
+        drawLines();
+        drawNodes();
+        requestAnimationFrame(update);
+    };
+
+    window.addEventListener('resize', resize, { passive: true });
+    window.addEventListener('mousemove', (event) => {
+        mouse.x = event.clientX;
+        mouse.y = event.clientY;
+        mouse.active = true;
+    }, { passive: true });
+    window.addEventListener('mouseleave', () => {
+        mouse.active = false;
+    }, { passive: true });
+
+    resize();
+    update();
+}
+
+initNeuralBackground();
+
 // Glitch Effect - Horizontal Strip Displacement (lighter version)
 const glitchDefaults = {
     strips: 30,
