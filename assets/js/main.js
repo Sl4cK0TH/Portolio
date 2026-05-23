@@ -141,7 +141,7 @@ initGlitchEffect({
     imageSelector: '#about-profile-image',
     containerSelector: '.about-image-section .image-container',
     stripsSelector: '.about-image-section .glitch-strips',
-    imagePath: '../assets/images/about-profile.jpg'
+    imagePath: '../assets/images/about-profile.png'
 });
 
 // Mobile menu toggle
