@@ -89,17 +89,16 @@ header {
 
 .logo-text {
     color: var(--text-primary);
-    font-size: 1.5rem;
-    text-shadow: 0 0 10px var(--text-primary);
+    font-size: 1.6rem;
+    font-family: 'Fira Code', monospace;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    text-shadow: 0 0 12px rgba(0, 255, 65, 0.7);
     cursor: pointer;
-    animation: glitch 3s infinite;
+    animation: glitch 4s infinite;
     white-space: nowrap;
 }
 
-.logo-text::before {
-    content: '$ ';
-    color: var(--accent);
-}
 
 @keyframes glitch {
     0%, 100% { text-shadow: 0 0 10px var(--text-primary); }
@@ -198,7 +197,7 @@ nav a.active {
     }
 
     .logo-text {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
     }
 
     .logo-image {
