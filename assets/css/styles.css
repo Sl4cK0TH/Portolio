@@ -74,7 +74,20 @@ header {
     text-decoration: none;
     color: inherit;
 }
-.logo h1 {
+.logo-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.7rem;
+}
+
+.logo-image {
+    height: 48px;
+    width: auto;
+    display: block;
+    filter: drop-shadow(0 0 6px rgba(0, 255, 65, 0.35));
+}
+
+.logo-text {
     color: var(--text-primary);
     font-size: 1.5rem;
     text-shadow: 0 0 10px var(--text-primary);
@@ -83,7 +96,7 @@ header {
     white-space: nowrap;
 }
 
-.logo h1::before {
+.logo-text::before {
     content: '$ ';
     color: var(--accent);
 }
@@ -184,8 +197,12 @@ nav a.active {
         padding: 0.3rem 0.5rem;
     }
 
-    .logo h1 {
+    .logo-text {
         font-size: 1.3rem;
+    }
+
+    .logo-image {
+        height: 42px;
     }
 }
 
